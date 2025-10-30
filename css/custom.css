@@ -1,0 +1,14 @@
+/* 分类页面描述样式 */
+.category-description {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  border-left: 4px solid #49b1f5;
+}
+
+.category-description p {
+  margin: 0;
+  color: #666;
+  line-height: 1.6;
+}
