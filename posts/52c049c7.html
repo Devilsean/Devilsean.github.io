@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>数据类型与变量 | 肖恩的博客</title><meta name="author" content="Sean"><meta name="copyright" content="Sean"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="数据类型 数据类型可分为基本类型、复合类型（派生类型）和自定义类型，每种类型对应固定的内存大小和操作规则。  基本类型   类型 典型大小（32&#x2F;64 位系统） 含义 &#x2F; 范围 面试考点    bool 1 字节 布尔值：true（1）&#x2F;false（0） 不可用0&#x2F; 非0代替（语法允许但不规范）；sizeof (bool) 恒为 1。   char 1 字节">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>数据类型与变量 | 肖恩的博客</title><meta name="author" content="Sean"><meta name="copyright" content="Sean"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="核心要点速览 数据类型分类：基本类型、复合（派生）类型、自定义类型 核心复合类型：指针、引用、数组、结构体、联合体、枚举 变量关键特性：存储类别（auto&#x2F;static&#x2F;extern 等）、初始化要求、作用域与生命周期 常量核心：const（只读）、constexpr（编译期常量） 类型转换：隐式转换（编译器自动）、显式转换（四种强制转换）   一、数据类型1.1 基本类型基本">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据类型与变量">
 <meta property="og:url" content="http://example.com/posts/52c049c7.html">
 <meta property="og:site_name" content="肖恩的博客">
-<meta property="og:description" content="数据类型 数据类型可分为基本类型、复合类型（派生类型）和自定义类型，每种类型对应固定的内存大小和操作规则。  基本类型   类型 典型大小（32&#x2F;64 位系统） 含义 &#x2F; 范围 面试考点    bool 1 字节 布尔值：true（1）&#x2F;false（0） 不可用0&#x2F; 非0代替（语法允许但不规范）；sizeof (bool) 恒为 1。   char 1 字节">
+<meta property="og:description" content="核心要点速览 数据类型分类：基本类型、复合（派生）类型、自定义类型 核心复合类型：指针、引用、数组、结构体、联合体、枚举 变量关键特性：存储类别（auto&#x2F;static&#x2F;extern 等）、初始化要求、作用域与生命周期 常量核心：const（只读）、constexpr（编译期常量） 类型转换：隐式转换（编译器自动）、显式转换（四种强制转换）   一、数据类型1.1 基本类型基本">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/mmexport1739965952317..jpg">
 <meta property="article:published_time" content="2025-10-29T07:30:00.000Z">
-<meta property="article:modified_time" content="2025-10-29T16:20:13.783Z">
+<meta property="article:modified_time" content="2025-10-30T00:25:25.668Z">
 <meta property="article:author" content="Sean">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="变量">
@@ -20,7 +20,7 @@
   "url": "http://example.com/posts/52c049c7.html",
   "image": "http://example.com/img/mmexport1739965952317..jpg",
   "datePublished": "2025-10-29T07:30:00.000Z",
-  "dateModified": "2025-10-29T16:20:13.783Z",
+  "dateModified": "2025-10-30T00:25:25.668Z",
   "author": [
     {
       "@type": "Person",
@@ -161,10 +161,16 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 8.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/mmexport1739965952317..jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-list"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-comment"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">肖恩的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">数据类型与变量</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-list"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-comment"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">数据类型与变量</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-29T16:20:13.783Z" title="更新于 2025-10-30 00:20:13">2025-10-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C/">C++</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C/1-%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">1. 基础语法与数据结构</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><ul>
-<li>数据类型可分为基本类型、复合类型（派生类型）和自定义类型，每种类型对应固定的内存大小和操作规则。</li>
+}</script><meta name="generator" content="Hexo 8.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/mmexport1739965952317..jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-list"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-comment"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">肖恩的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">数据类型与变量</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-list"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fa fa-comment"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">数据类型与变量</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-30T00:25:25.668Z" title="更新于 2025-10-30 08:25:25">2025-10-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C/">C++</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C/1-%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95%E4%B8%8E%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">1. 基础语法与数据结构</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="核心要点速览"><a href="#核心要点速览" class="headerlink" title="核心要点速览"></a>核心要点速览</h2><ul>
+<li>数据类型分类：基本类型、复合（派生）类型、自定义类型</li>
+<li>核心复合类型：指针、引用、数组、结构体、联合体、枚举</li>
+<li>变量关键特性：存储类别（auto&#x2F;static&#x2F;extern 等）、初始化要求、作用域与生命周期</li>
+<li>常量核心：const（只读）、constexpr（编译期常量）</li>
+<li>类型转换：隐式转换（编译器自动）、显式转换（四种强制转换）</li>
 </ul>
-<h3 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h3><table>
+<hr>
+<h2 id="一、数据类型"><a href="#一、数据类型" class="headerlink" title="一、数据类型"></a>一、数据类型</h2><h3 id="1-1-基本类型"><a href="#1-1-基本类型" class="headerlink" title="1.1 基本类型"></a>1.1 基本类型</h3><p>基本类型是 C++ 内置的基础数据类型，具有固定内存大小（部分受平台影响）和明确取值范围。</p>
+<table>
 <thead>
 <tr>
 <th>类型</th>
@@ -177,89 +183,79 @@
 <td><code>bool</code></td>
 <td>1 字节</td>
 <td>布尔值：<code>true</code>（1）&#x2F;<code>false</code>（0）</td>
-<td>不可用<code>0</code>&#x2F; 非<code>0</code>代替（语法允许但不规范）；sizeof (bool) 恒为 1。</td>
+<td><code>sizeof(bool)</code>恒为 1；不可用 0 &#x2F; 非 0 代替（语法允许但不规范）</td>
 </tr>
 <tr>
 <td><code>char</code></td>
 <td>1 字节</td>
-<td>字符（ASCII 码：-128<del>127 或 0</del>255）</td>
-<td>区分<code>signed char</code>（带符号）和<code>unsigned char</code>（无符号）；默认符号性由编译器决定。</td>
+<td>ASCII 码：-128<del>127 或 0</del>255</td>
+<td>区分<code>signed char</code>（带符号）和<code>unsigned char</code>（无符号）；默认符号性由编译器决定</td>
 </tr>
 <tr>
 <td><code>short</code></td>
 <td>2 字节</td>
 <td>短整数：-32768~32767</td>
-<td>与<code>short int</code>等价；常用于节省内存。</td>
+<td>与<code>short int</code>等价；用于节省内存</td>
 </tr>
 <tr>
 <td><code>int</code></td>
-<td>4 字节（32&#x2F;64 位通用）</td>
-<td>整数：-2^31~2^31-1</td>
-<td>平台无关性（主流编译器统一 4 字节）；返回值、计数首选类型。</td>
+<td>4 字节（通用）</td>
+<td>整数：-2³¹~2³¹-1</td>
+<td>平台无关性（主流编译器统一 4 字节）；计数、返回值首选类型</td>
 </tr>
 <tr>
 <td><code>long</code></td>
 <td>4 字节（32 位）&#x2F;8 字节（64 位）</td>
-<td>长整数：-2^31~2^31-1（32 位）等</td>
-<td>注意平台差异（避免依赖<code>long</code>的大小，优先用<code>int64_t</code>等固定宽度类型）。</td>
+<td>长整数：随平台变化</td>
+<td>避免依赖其大小，优先用固定宽度类型（如<code>int64_t</code>）</td>
 </tr>
 <tr>
 <td><code>long long</code></td>
 <td>8 字节</td>
-<td>超长整数：-2^63~2^63-1</td>
-<td>C++11 后标准，跨平台 8 字节，适合大整数。</td>
+<td>超长整数：-2⁶³~2⁶³-1</td>
+<td>C++11 标准，跨平台 8 字节，适合大整数</td>
 </tr>
 <tr>
 <td><code>float</code></td>
 <td>4 字节</td>
-<td>单精度浮点：有效数字～6-7 位</td>
-<td>精度低，适合存储大量数据；避免直接比较（误差问题）。</td>
+<td>单精度浮点：有效数字 6-7 位</td>
+<td>精度低；避免直接比较（存在误差）</td>
 </tr>
 <tr>
 <td><code>double</code></td>
 <td>8 字节</td>
-<td>双精度浮点：有效数字～15-17 位</td>
-<td>默认浮点类型（如<code>3.14</code>是 double）；科学计算首选。</td>
+<td>双精度浮点：有效数字 15-17 位</td>
+<td>默认浮点类型（如<code>3.14</code>是 double）；科学计算首选</td>
 </tr>
 <tr>
 <td><code>void</code></td>
 <td>无大小</td>
 <td>无类型（表示 “空”）</td>
-<td>用于函数返回值（无返回）、指针（<code>void*</code>可指向任意类型）。</td>
+<td>用于无返回值函数、<code>void*</code>指针（可指向任意类型）</td>
 </tr>
 </tbody></table>
-<ul>
-<li>如何保证整数类型的跨平台一致性<ul>
-<li>使用 C++11 引入的<strong>固定宽度类型</strong>（定义于<code>&lt;cstdint&gt;</code>），如<code>int32_t</code>（32 位带符号）、<code>uint64_t</code>（64 位无符号），避免依赖<code>long</code>等平台相关类型。</li>
+<h4 id="关键补充"><a href="#关键补充" class="headerlink" title="关键补充"></a>关键补充</h4><ul>
+<li>跨平台一致性保证：使用 C++11 固定宽度类型（定义于<code>&lt;cstdint&gt;</code>），如<code>int32_t</code>（32 位带符号）、<code>uint64_t</code>（64 位无符号）。</li>
+<li><code>sizeof</code>计算规则：<code>sizeof(char)</code>恒为 1；<code>sizeof(int)</code>通常 4 字节；<code>sizeof(void)</code>编译报错；<code>sizeof(bool)</code>始终为 1。</li>
 </ul>
-</li>
-<li>sizeof对基本类型的计算结果<ul>
-<li><code>sizeof(char)</code>恒为 1；<code>sizeof(int)</code>通常 4 字节；<code>sizeof(void)</code>无意义（编译报错）；<code>sizeof(bool)</code>为 1（无论值是 true&#x2F;false）。</li>
-</ul>
-</li>
-</ul>
-<h3 id="复合类型（派生类型）"><a href="#复合类型（派生类型）" class="headerlink" title="复合类型（派生类型）"></a>复合类型（派生类型）</h3><ul>
-<li>基于基本类型或自定义类型扩展，核心包括指针、引用、数组、结构体、联合体、枚举</li>
-</ul>
-<h5 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h5><ul>
-<li><p>存储另一个变量的内存地址（32 位系统占 4 字节，64 位占 8 字节，<strong>与指向的类型无关</strong>）。</p>
-</li>
-<li><p>未初始化的指针为<strong>野指针</strong>（指向随机地址，操作会导致未定义行为，如崩溃）；</p>
-</li>
-<li><p><code>nullptr</code>（C++11）：空指针常量（替代<code>NULL</code>，<code>NULL</code>本质是<code>0</code>，可能引发歧义）；</p>
-</li>
-<li><p>指针运算：仅对数组指针有意义（<code>p++</code>指向后一个元素，步长为指向类型的大小）。</p>
-</li>
-<li><p>数组名是“指向首元素的常量指针”（不可修改指向）</p>
+<h3 id="1-2-复合类型（派生类型）"><a href="#1-2-复合类型（派生类型）" class="headerlink" title="1.2 复合类型（派生类型）"></a>1.2 复合类型（派生类型）</h3><p>基于基本类型或自定义类型扩展，核心用于组合、关联或间接访问数据。</p>
+<h4 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h4><ul>
+<li>存储目标变量的内存地址，大小仅与系统位数相关（32 位 4 字节，64 位 8 字节，与指向类型无关）。</li>
+<li>核心特性：<ol>
+<li>未初始化指针为<strong>野指针</strong>（指向随机地址，操作易崩溃），需避免。</li>
+<li><code>nullptr</code>（C++11）：空指针常量，替代<code>NULL</code>（<code>NULL</code>本质是 0，易引发歧义）。</li>
+<li>指针运算：仅对数组指针有效（<code>p++</code>步长为指向类型的大小）。</li>
+<li>数组名本质：指向数组首元素的常量指针（不可修改指向）。</li>
+</ol>
 </li>
 </ul>
-<h5 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h5><ul>
-<li>变量的 “别名”，语法：<code>类型&amp; 引用名 = 变量名</code>（<strong>必须初始化，且绑定后不可更改</strong>）。</li>
+<h4 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h4><ul>
+<li>变量的 “别名”，语法：<code>类型&amp; 引用名 = 变量名</code>，必须初始化且绑定后不可更改。</li>
 </ul>
 <table>
 <thead>
 <tr>
-<th>维度</th>
+<th>对比项</th>
 <th>指针</th>
 <th>引用</th>
 </tr>
@@ -276,35 +272,27 @@
 </tr>
 <tr>
 <td>初始化</td>
-<td>可延迟初始化（但风险高）</td>
-<td>必须在定义时初始化</td>
+<td>可延迟初始化（风险高）</td>
+<td>必须定义时初始化</td>
 </tr>
 <tr>
-<td>内存</td>
+<td>内存占用</td>
 <td>占内存（存储地址）</td>
 <td>不占额外内存（编译器优化）</td>
 </tr>
 <tr>
-<td>用途</td>
+<td>核心用途</td>
 <td>动态内存管理、多级间接访问</td>
 <td>函数参数 &#x2F; 返回值（避免拷贝）、简化代码</td>
 </tr>
 </tbody></table>
-<h5 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h5><ul>
-<li>用户自定义数据类型，核心作用是<strong>将多个不同类型的数据（成员）组合成一个整体</strong>—— 成员按顺序占用独立的内存空间，互不干扰，可同时访问所有成员。结构体的大小 &#x3D; 所有成员大小之和 + 内存对齐所需的填充字节。</li>
+<h4 id="结构体（Struct）"><a href="#结构体（Struct）" class="headerlink" title="结构体（Struct）"></a>结构体（Struct）</h4><ul>
+<li>组合多个不同类型数据（成员）为一个整体，成员按顺序占用独立内存。</li>
+<li>核心特性：结构体大小 &#x3D; 成员大小之和 + 内存对齐填充字节。</li>
+<li>用途：存储关联数据（如个人信息：姓名、年龄、身高）。</li>
 </ul>
-<h5 id="联合体"><a href="#联合体" class="headerlink" title="联合体"></a>联合体</h5><ul>
-<li><strong>所有成员共享同一块内存空间</strong>。这意味着联合体的大小由其<strong>最大的成员</strong>决定，且同一时间只能有效使用其中一个成员。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个联合体类型UnionData</span></span><br><span class="line"><span class="class"><span class="keyword">union</span> <span class="title">UnionData</span> &#123;</span></span><br><span class="line">    <span class="type">int</span> i;       <span class="comment">// 4字节（假设int为4字节）</span></span><br><span class="line">    <span class="type">float</span> f;     <span class="comment">// 4字节</span></span><br><span class="line">    <span class="type">char</span> c;      <span class="comment">// 1字节</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>核心特性</strong>：<ul>
-<li>成员共享内存：所有成员的起始地址相同，共用一块内存。修改其中一个值会直接覆盖其他成员存储内容。</li>
-<li>大小由最大成员决定：联合体的总大小 &#x3D; 最大成员的大小（需满足对齐要求）</li>
-<li>同一时间只能用一个成员：由于共享内存，同时使用多个成员会导致数据混乱</li>
-</ul>
-</li>
+<h4 id="联合体（Union）"><a href="#联合体（Union）" class="headerlink" title="联合体（Union）"></a>联合体（Union）</h4><ul>
+<li>所有成员共享同一块内存，同一时间仅能有效使用一个成员。</li>
 </ul>
 <table>
 <thead>
@@ -316,182 +304,127 @@
 </thead>
 <tbody><tr>
 <td>内存分配</td>
-<td>成员依次占用独立内存，总大小 &#x3D; 成员大小之和 + 填充</td>
-<td>所有成员共享同一块内存，总大小 &#x3D; 最大成员大小（+ 对齐填充）</td>
+<td>成员独立占用内存，总大小 &#x3D; 成员和 + 填充</td>
+<td>成员共享内存，总大小 &#x3D; 最大成员大小（+ 对齐填充）</td>
 </tr>
 <tr>
 <td>成员关系</td>
-<td>成员是 “并存” 的（可同时访问所有成员）</td>
-<td>成员是 “互斥” 的（同一时间只能有效使用一个成员）</td>
+<td>成员并存（可同时访问）</td>
+<td>成员互斥（同一时间仅能用一个）</td>
 </tr>
 <tr>
-<td>用途</td>
-<td>组合不同类型的数据（如记录一个人的姓名、年龄、身高）</td>
-<td>节省内存（当成员不同时使用）或实现类型转换（通过不同成员访问同一块内存）</td>
+<td>核心用途</td>
+<td>组合关联数据</td>
+<td>节省内存、实现类型转换</td>
 </tr>
 </tbody></table>
-<h5 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h5><ul>
-<li><p>传统枚举类型：（<code>enum E {A, B=5, C};</code>）成员作用域全局（易冲突），可隐式转换为int。</p>
+<h4 id="枚举（Enum）"><a href="#枚举（Enum）" class="headerlink" title="枚举（Enum）"></a>枚举（Enum）</h4><ul>
+<li>自定义整数类型，用于组合含义相关的命名常量。</li>
+<li>分类：<ol>
+<li>传统枚举：<code>enum E {A, B=5, C};</code>，成员作用域全局（易冲突），可隐式转 int。</li>
+<li>强类型枚举（C++11 推荐）：<code>enum class E {A, B};</code>，作用域受限（需<code>E::A</code>访问），不可隐式转 int（更安全）。</li>
+</ol>
 </li>
-<li><p>强类型枚举：（<code>enum class E {A, B};</code>，C++11）作用域受限（需<code>E::A</code>访问），不可隐式转换（更安全，推荐使用）。</p>
-</li>
-<li><p><strong>用户自定义的整数类型</strong>，用于将一组含义相关的 “命名常量” 组合在一起，本质是给整数起有意义的名字</p>
-</li>
-<li><p><strong>核心特性</strong>：</p>
-<ul>
-<li>本质是整数：默认类型为int</li>
-<li>默认值规则：未手动赋值时，第一个常量为0，后续依次+1；若中间某个常量手动赋值，后续常量在其基础上+1。</li>
+<li>赋值规则：未手动赋值时，首个常量为 0，后续依次 + 1；中间赋值后，后续常量基于该值递增。</li>
 </ul>
-</li>
+<h3 id="1-3-自定义类型"><a href="#1-3-自定义类型" class="headerlink" title="1.3 自定义类型"></a>1.3 自定义类型</h3><ul>
+<li>由用户通过<code>class</code>（类）、<code>struct</code>（结构体）、<code>enum</code>（枚举）等关键字定义的类型。</li>
+<li>核心作用：封装数据与行为，提升代码可读性和复用性。</li>
 </ul>
+<hr>
+<h2 id="二、变量"><a href="#二、变量" class="headerlink" title="二、变量"></a>二、变量</h2><h3 id="2-1-变量的定义与初始化"><a href="#2-1-变量的定义与初始化" class="headerlink" title="2.1 变量的定义与初始化"></a>2.1 变量的定义与初始化</h3><ul>
+<li><p>定义：编译器为变量分配内存空间。</p>
+</li>
+<li><p>初始化：定义时赋予初始值（避免 “垃圾值”，提升代码安全性）。</p>
+</li>
+<li><p>常见初始化方式：</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;    <span class="comment">// 拷贝初始化</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">b</span><span class="params">(<span class="number">20</span>)</span></span>;     <span class="comment">// 直接初始化（适合构造函数场景）</span></span><br><span class="line"><span class="type">int</span> c&#123;<span class="number">30</span>&#125;;     <span class="comment">// 列表初始化（C++11，禁止窄化转换，如int&#123;3.14&#125;编译报错）</span></span><br><span class="line"><span class="type">int</span> d = &#123;<span class="number">40</span>&#125;;  <span class="comment">// 拷贝列表初始化</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="2-2-存储类别（关键字修饰）"><a href="#2-2-存储类别（关键字修饰）" class="headerlink" title="2.2 存储类别（关键字修饰）"></a>2.2 存储类别（关键字修饰）</h3><p>存储类别决定变量的生命周期、作用域和存储位置。</p>
 <table>
 <thead>
 <tr>
-<th>对比项</th>
-<th>枚举（Enum）</th>
-<th><code>#define</code> 宏</th>
+<th>关键字</th>
+<th>核心特性与用途</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>类型检查</td>
-<td>有类型（枚举类型），编译器会检查赋值合法性（C++ 更严格）</td>
-<td>无类型，仅文本替换，不做任何检查</td>
+<td><code>auto</code>（C++11）</td>
+<td>编译器自动推导类型；不能用于函数参数（模板除外）、数组类型；推导引用需显式加<code>&amp;</code></td>
 </tr>
 <tr>
-<td>作用域</td>
-<td>C++ 强类型枚举有独立作用域（<code>enum class</code>），避免冲突</td>
-<td>全局作用域，从定义处到文件结束，易冲突</td>
+<td><code>static</code></td>
+<td>局部静态变量：生命周期为程序全程，首次调用初始化；全局静态变量：仅当前.cpp 可见（避免命名冲突）；类静态成员：属于类，所有对象共享</td>
 </tr>
 <tr>
-<td>调试友好性</td>
-<td>调试时显示常量名（如<code>MON</code>），可读性高</td>
-<td>调试时显示替换后的数值（如<code>0</code>），难理解</td>
+<td><code>extern</code></td>
+<td>声明变量 &#x2F; 函数在其他文件定义（跨文件共享）；仅声明不分配内存，带初始化则变为定义</td>
 </tr>
 <tr>
-<td>自动赋值</td>
-<td>支持自动递增赋值（无需手动写<code>1,2,3</code>）</td>
-<td>需手动为每个常量赋值，繁琐且易出错</td>
+<td><code>register</code></td>
+<td>提示编译器存于寄存器（C++17 后弃用，现代编译器优化足够）</td>
 </tr>
 <tr>
-<td>取值范围约束</td>
-<td>枚举变量理论上只能取枚举常量的值（增强代码健壮性）</td>
-<td>无约束，变量可被赋任意值</td>
+<td><code>mutable</code></td>
+<td>仅用于类非静态成员；允许 const 成员函数修改该变量（突破 const 限制）</td>
+</tr>
+<tr>
+<td><code>volatile</code></td>
+<td>禁止编译器优化；变量值可能被外部因素修改（如硬件、多线程），每次访问直接读内存</td>
 </tr>
 </tbody></table>
-<h3 id="自定义类型"><a href="#自定义类型" class="headerlink" title="自定义类型"></a>自定义类型</h3><ul>
-<li><code>class</code>（类）、<code>struct</code>（结构体）、<code>enum</code>（枚举）等定义的类型，核心是数据的封装与行为。</li>
+<h3 id="2-3-常见问题解答"><a href="#2-3-常见问题解答" class="headerlink" title="2.3 常见问题解答"></a>2.3 常见问题解答</h3><ul>
+<li>局部变量屏蔽全局变量时如何访问全局变量？用<code>::</code>（全局作用域解析符），如<code>::global_var</code>。</li>
+<li>全局变量与局部<code>static</code>变量的初始化顺序？全局变量在<code>main</code>前初始化，局部<code>static</code>变量首次进入函数时初始化（C++11 后线程安全）；销毁顺序与初始化相反。</li>
+<li>未初始化的局部变量和全局变量区别？局部非<code>static</code>变量是 “垃圾值”；全局变量和<code>static</code>变量会零初始化（数值为 0，指针为<code>nullptr</code>）。</li>
 </ul>
-<hr>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><h3 id="变量定义与初始化"><a href="#变量定义与初始化" class="headerlink" title="变量定义与初始化"></a>变量定义与初始化</h3><ul>
-<li>定义：编译器分配内存</li>
-<li>初始化：定义时赋初值（避免未初始化的“垃圾值”）<ul>
-<li>常见初始化方式：（列表初始化的优势——防止类型窄化）</li>
-</ul>
+<h3 id="2-4-常量"><a href="#2-4-常量" class="headerlink" title="2.4 常量"></a>2.4 常量</h3><p>常量是初始化后不可修改的变量，核心分为<code>const</code>和<code>constexpr</code>。</p>
+<h4 id="const（只读常量）"><a href="#const（只读常量）" class="headerlink" title="const（只读常量）"></a><code>const</code>（只读常量）</h4><ul>
+<li><p>修饰变量：初始化后不可修改，作用域与变量一致。</p>
 </li>
+<li><p>修饰指针（三大场景）：</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span>* p;    <span class="comment">// 常量指针：指向的内容不可改（*p不可改），p可改指向</span></span><br><span class="line"><span class="type">int</span>* <span class="type">const</span> p;    <span class="comment">// 指针常量：p的指向不可改，*p可改</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span>* <span class="type">const</span> p;  <span class="comment">// 指向常量的指针常量：内容和指向均不可改</span></span><br></pre></td></tr></table></figure></li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;       <span class="comment">// 拷贝初始化</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">b</span><span class="params">(<span class="number">20</span>)</span></span>;        <span class="comment">// 直接初始化（适合构造函数）</span></span><br><span class="line"><span class="type">int</span> c&#123;<span class="number">30</span>&#125;;        <span class="comment">// 列表初始化（C++11，禁止窄化转换，如int&#123;3.14&#125;编译报错）</span></span><br><span class="line"><span class="type">int</span> d = &#123;<span class="number">40</span>&#125;;     <span class="comment">// 拷贝列表初始化</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="存储类别（关键字修饰）"><a href="#存储类别（关键字修饰）" class="headerlink" title="存储类别（关键字修饰）"></a>存储类别（关键字修饰）</h3><ul>
-<li>决定变量的生命周期和作用域（auto、static、extern、register、mutable）</li>
+<h4 id="constexpr（编译期常量，C-11）"><a href="#constexpr（编译期常量，C-11）" class="headerlink" title="constexpr（编译期常量，C++11）"></a><code>constexpr</code>（编译期常量，C++11）</h4><ul>
+<li>要求表达式在编译期可计算，比<code>const</code>更严格（<code>const</code>可运行期初始化）。</li>
+<li>用途：定义数组大小、模板参数等依赖编译期常量的场景。</li>
 </ul>
-<h5 id="auto（类型推导，C-11）"><a href="#auto（类型推导，C-11）" class="headerlink" title="auto（类型推导，C++11）"></a>auto（类型推导，C++11）</h5><ul>
-<li>编译器根据初始化值自动推导变量类型</li>
-<li><strong>auto不能用于函数参数（除非是模板）、数组类型推导。</strong></li>
-<li>推导引用时，需显式添加<code>&amp;</code>（如<code>auto &amp;</code>），否则推导为值类型。</li>
+<h3 id="2-5-类型转换"><a href="#2-5-类型转换" class="headerlink" title="2.5 类型转换"></a>2.5 类型转换</h3><h4 id="隐式转换（自动转换）"><a href="#隐式转换（自动转换）" class="headerlink" title="隐式转换（自动转换）"></a>隐式转换（自动转换）</h4><ul>
+<li>遵循 “安全优先” 原则，优先 “小范围→大范围”（类型提升），避免溢出。</li>
+<li>转换顺序：<code>bool</code>→<code>char</code>→<code>short</code>→<code>int</code>→<code>long</code>→<code>long long</code>→<code>float</code>→<code>double</code>→<code>long double</code>。</li>
+<li>注意：<code>explicit</code>关键字可禁止类的隐式类型转换。</li>
 </ul>
-<h5 id="static（静态存储）"><a href="#static（静态存储）" class="headerlink" title="static（静态存储）"></a>static（静态存储）</h5><ul>
-<li>局部静态变量：在函数内定义，生命周期为程序全程（首次调用初始化，<strong>后续调用不重新初始化</strong>），作用域仅限函数内。</li>
-<li>全局静态变量：文件作用域（<strong>仅</strong>当前.cpp可见），避免文件命名冲突（替代全局变量，减少耦合）。</li>
-<li>类静态成员：属于类而非对象，所有对象共享，需在类外初始化（除const static整数）。</li>
-</ul>
-<h5 id="extern（外部声明）"><a href="#extern（外部声明）" class="headerlink" title="extern（外部声明）"></a>extern（外部声明）</h5><ul>
-<li><p>声明变量&#x2F;函数在其他文件中定义，用于跨文件共享，避免重复定义。</p>
-</li>
-<li><p>extern仅声明，不分配内存；若带初始化则变为定义，可能导致重复定义错误。</p>
-</li>
-</ul>
-<h5 id="register（存储器存储，C-17后弃用）"><a href="#register（存储器存储，C-17后弃用）" class="headerlink" title="register（存储器存储，C++17后弃用）"></a>register（存储器存储，C++17后弃用）</h5><ul>
-<li>提示编译器将变量存储在寄存器（速度更快），但现代编译器优化已足够，无需手动指定</li>
-</ul>
-<h5 id="mutable（易变的）"><a href="#mutable（易变的）" class="headerlink" title="mutable（易变的）"></a>mutable（易变的）</h5><ul>
-<li>仅用于类的非静态成员变量，允许const成员函数修改它（突破const限制）</li>
-</ul>
-<h5 id="volatile（禁止编译器优化）"><a href="#volatile（禁止编译器优化）" class="headerlink" title="volatile（禁止编译器优化）"></a>volatile（禁止编译器优化）</h5><ul>
-<li>告知编译器：该变量的值可能被 “当前代码流之外的因素” 意外修改（如硬件寄存器、中断服务程序、多线程共享变量等），因此禁止对其进行 “缓存到寄存器”“指令重排” 等优化，确保每次访问都直接从内存读取。</li>
-</ul>
-<h4 id="问答"><a href="#问答" class="headerlink" title="问答"></a>问答</h4><ul>
-<li>局部变量屏蔽全局变量时，如何访问被屏蔽的全局变量？<ul>
-<li>用<code>::</code>（全局作用域解析符），</li>
-</ul>
-</li>
-<li>全局变量和局部<code>static</code>变量的初始化顺序？<ul>
-<li>全局变量（包括命名空间内）在<code>main</code>前初始化，局部<code>static</code>变量在<strong>首次进入函数</strong>时初始化（C++11 后线程安全）。两者销毁顺序与初始化顺序相反。</li>
-</ul>
-</li>
-<li>未初始化的局部变量和全局变量有何区别？<ul>
-<li>局部非<code>static</code>变量（自动存储期）未初始化时是 “垃圾值”（内存残留数据）；全局变量和<code>static</code>变量会被<strong>零初始化</strong>（数值类型为 0，指针为<code>nullptr</code>等）。</li>
-</ul>
-</li>
-</ul>
-<h3 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h3><ul>
-<li>常量是不可修改的变量，核心区分const（只读）和constexpr（编译期常量）</li>
-</ul>
-<h5 id="const"><a href="#const" class="headerlink" title="const"></a>const</h5><ul>
-<li>修饰变量：值初始化后不可修改，作用域与变量一致。</li>
-<li>修饰指针：需区分“指针常量”和“常量指针”：</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span>* p;  <span class="comment">// 常量指针：指向的内容不可改（*p不可改），p可改指向</span></span><br><span class="line"><span class="type">int</span>* <span class="type">const</span> p;  <span class="comment">// 指针常量：p的指向不可改，*p可改</span></span><br><span class="line"><span class="type">const</span> <span class="type">int</span>* <span class="type">const</span> p;  <span class="comment">// 指向常量的指针常量：均不可改</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="constexpr（C-11，编译器常量）"><a href="#constexpr（C-11，编译器常量）" class="headerlink" title="constexpr（C++11，编译器常量）"></a>constexpr（C++11，编译器常量）</h5><ul>
-<li>要求表达式在编译器可计算，比const更严格（const可运行期初始化）。</li>
-<li>用途：定义数组大小、模板参数等，依赖编译期常量的场景。</li>
-</ul>
-<h3 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h3><ul>
-<li>分隐式转换（编译器自动）和显式转换（强制转换）</li>
-</ul>
-<h5 id="隐式转换（自动转换）"><a href="#隐式转换（自动转换）" class="headerlink" title="隐式转换（自动转换）"></a>隐式转换（自动转换）</h5><ul>
-<li>”安全优先“原则，优先“小范围”-&gt;“大范围”（类型提升），避免溢出；若无法安全转换，则可能导致精度丢失，但编译器通常不报错。</li>
-<li><code>bool</code> → <code>char</code>&#x2F;<code>signed char</code>&#x2F;<code>unsigned char</code> → <code>short</code>&#x2F;<code>unsigned short</code> → <code>int</code>&#x2F;<code>unsigned int</code> → <code>long</code>&#x2F;<code>unsigned long</code> → <code>long long</code>&#x2F;<code>unsigned long long</code> → <code>float</code> → <code>double</code> → <code>long double</code></li>
-<li><code>explicit</code>关键字可以禁止隐式类型转换。</li>
-</ul>
-<h5 id="显式转换（四种强制转换）"><a href="#显式转换（四种强制转换）" class="headerlink" title="显式转换（四种强制转换）"></a>显式转换（四种强制转换）</h5><p>[[强制类型转换]]</p>
-<table>
+<h4 id="显式转换（四种强制转换）"><a href="#显式转换（四种强制转换）" class="headerlink" title="显式转换（四种强制转换）"></a>显式转换（四种强制转换）</h4><table>
 <thead>
 <tr>
 <th>转换方式</th>
-<th>用途</th>
-<th>风险</th>
+<th>核心用途</th>
+<th>风险程度</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>static_cast</code></td>
 <td>基本类型转换（<code>int→double</code>）、父类 &#x2F; 子类指针转换（无动态检查）</td>
-<td>子类→父类安全，父类→子类可能越界</td>
+<td>中等（父类→子类可能越界）</td>
 </tr>
 <tr>
 <td><code>dynamic_cast</code></td>
 <td>多态类型转换（仅用于含虚函数的类），运行期检查有效性</td>
-<td>转换失败返回<code>nullptr</code>（指针）或抛出异常（引用），开销略大</td>
+<td>低（失败返回<code>nullptr</code>&#x2F; 抛异常）</td>
 </tr>
 <tr>
 <td><code>const_cast</code></td>
-<td>移除<code>const</code>属性（仅用于指针 &#x2F; 引用）</td>
-<td>修改原<code>const</code>变量会导致未定义行为</td>
+<td>移除指针 &#x2F; 引用的<code>const</code>属性</td>
+<td>高（修改原<code>const</code>变量会导致未定义行为）</td>
 </tr>
 <tr>
 <td><code>reinterpret_cast</code></td>
 <td>底层二进制重解释（如<code>int*→char*</code>）</td>
-<td>高度危险，依赖平台，几乎不保证可移植性</td>
+<td>极高（依赖平台，无移植性）</td>
 </tr>
 </tbody></table>
-<ul>
-<li>何时用<code>dynamic_cast</code>？<ul>
-<li>多态场景下，需要将父类指针安全转换为子类指针（需父类有虚函数，运行期检查转换合法性）</li>
+<h4 id="关键问题"><a href="#关键问题" class="headerlink" title="关键问题"></a>关键问题</h4><ul>
+<li>何时用<code>dynamic_cast</code>？多态场景下，需将父类指针安全转为子类指针（需父类有虚函数，运行期校验合法性）。</li>
+<li>为何避免<code>reinterpret_cast</code>？直接操作二进制，忽略类型安全，结果依赖平台，移植性极差。</li>
 </ul>
-</li>
-<li>为什么避免<code>reinterpret_cast</code>？<ul>
-<li>它直接操作二进制，忽略类型安全。</li>
-</ul>
-</li>
-</ul>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Sean</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/posts/52c049c7.html">http://example.com/posts/52c049c7.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">肖恩的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/%E5%8F%98%E9%87%8F/">变量</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">数据类型</a></div><div class="post-share"><div class="social-share" data-image="/img/mmexport1739965952317..jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/dc2fae3c.html" title="运算符与表达式"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">运算符与表达式</div></div><div class="info-2"><div class="info-item-1"> 逻辑运算符的短路求值：  &amp;&amp;：左操作数为false时，右操作数不执行（直接返回 false）。 ||：左操作数为true时，右操作数不执行（直接返回 true）。   逗号运算符（,）：  按顺序执行多个表达式，返回最后一个表达式的值，优先级最低。   右结合运算符    赋值运算符&#x3D; 条件运算符?&#x3D; 单目运算符（包括前缀 ++、前缀 --、*、&amp;、!、~、+（正）、-（负）、sizeof 等）  </div></div></div></a><a class="pagination-related" href="/posts/9a70fb8f.html" title="共白头"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">共白头</div></div><div class="info-2"><div class="info-item-1">       共白头  忽有故人心上过，回首山河已入冬。 他朝若是同淋雪，此生也算共白头。 白头若是雪可替，世间何来伤心人。 此时若有君在侧，何须淋雪作白头。    </div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/dc2fae3c.html" title="运算符与表达式"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">运算符与表达式</div></div><div class="info-2"><div class="info-item-1"> 逻辑运算符的短路求值：  &amp;&amp;：左操作数为false时，右操作数不执行（直接返回 false）。 ||：左操作数为true时，右操作数不执行（直接返回 true）。   逗号运算符（,）：  按顺序执行多个表达式，返回最后一个表达式的值，优先级最低。   右结合运算符    赋值运算符&#x3D; 条件运算符?&#x3D; 单目运算符（包括前缀 ++、前缀 --、*、&amp;、!、~、+（正）、-（负）、sizeof 等）  </div></div></div></a><a class="pagination-related" href="/posts/1111c3f5.html" title="函数基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">函数基础</div></div><div class="info-2"><div class="info-item-1"> 函数声明与定义：原型声明需匹配参数类型&#x2F;个数（返回类型不影响） 参数传递： 按值传递：形参是实参拷贝（修改不影响实参） 按引用传递：int&amp;（形参是实参别名，避免拷贝，修改影响实参） 按指针传递：int*（通过地址间接修改，可传递nullptr）   函数重载：同一作用域，函数名相同，参数列表（类型&#x2F;个数&#x2F;顺序）不同（返回类型不参与重载） 重载协议：编译器根据实参类型匹配最佳函数（隐式转换可能影响匹配）   内联函数：inline（建议编译器嵌入调用处，减少调用开销，适合短函数；不能有循环&#x2F;递归） 默认参数：靠右原则（默认参数只能从右往左开始省略，不能跳过右侧参数省略左侧参数）  函数的基本结构与声明定义声明与定义的区别 声明：仅告知编译器函数的 “存在及原型”（返回类型、函数名、参数列表），不包含实现，用于 “提前声明”（解决函数调用在前、定义在后的问题）。（参数名在声明时是可选的） 定义：包含函数声明 + 函数体（具体实现），编译器会为其分配内存（生成指令）。规则：一个函数可以声明多次，但只能定义一次（否则链接报错 “重复定义...</div></div></div></a><a class="pagination-related" href="/posts/43ae7cb1.html" title="程序结构与预处理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">程序结构与预处理</div></div><div class="info-2"><div class="info-item-1"> 程序入口：main函数（返回值int，return 0表示正常退出） 预处理指令： #include：头文件包含（&lt;&gt;系统文件；&quot;&quot;自定义头文件，搜索路径有所区别） #define：宏定义（无类型检查，带参数宏的陷阱） 条件编译：#ifdef（若已定义则编译）&#x2F;#ifndef（若未定义则编译）&#x2F;endif（用于跨平台代码、防止头文件重复包含） #pragma once：替代#ifndef防止头文件重复包含（非标准但广泛支持）    程序结构 执行流程：预处理-&gt;编译-&gt;汇编-&gt;链接-&gt;执行。  预处理 预处理是编译的第一个阶段，由预处理器处理所有以#开头的指令，生成”预处理后的源代码“（消除注释、展开宏、处理条件编译等）。  #include #include &lt;header&gt;：优先搜索系统标准头文件目录（如/usr/include），用于引入标准库（如&lt;iostream&gt;、&lt;vector&gt;）。 #include &quot;header&quot;：优先搜索当前源文...</div></div></div></a><a class="pagination-related" href="/posts/6ea8b1ca.html" title="友元与运算符重载"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">友元与运算符重载</div></div><div class="info-2"><div class="info-item-1"> 友元： 友元函数：friend void print(A a);（非成员函数，可访问私有成员，破坏封装） 友元类：friend class B;（类 B 可访问当前类私有成员）   运算符重载： 可重载：+，-，*，&#x2F;，&#x3D;，=&#x3D;，!&#x3D;，&lt;&lt;，&gt;&gt;等（&lt;&lt;，&gt;&gt;需作为非成员函数） 不可重载：.&#x2F;.*&#x2F;::&#x2F;? :&#x2F;sizeof 赋值运算符&#x3D;：只能作为成员函数（编译器默认生成，深拷贝需重写）  友元函数：打破封装 友元函数是被类声明为 “朋友” 的外部函数，可以直接访问类的私有（private）和保护（protected）成员  核心特性 声明方式：在类内部用friend关键字声明，函数定义可在类内或类外（通常在类外，保持类定义简洁）。 非成员函数：友元函数不是类的成员函数，没有this指针，访问类成员时需显式传递对象参数。  友元的种类 友元函数：单个函数作为友元 友元类：整个类作为友元，其所有成员函数可访问当前类的私有成员 友元成员函数：类的...</div></div></div></a><a class="pagination-related" href="/posts/3a517f26.html" title="类与对象"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">类与对象</div></div><div class="info-2"><div class="info-item-1"> 访问控制：public（接口）、private（实现）、protected（继承） const成员： const成员变量：必须在初始化列表初始化 const成员函数：不能修改成员变量，可被const对象调用   static成员： 静态成员变量：类共享，需类外定义 静态成员函数：无this指针，只能访问静态成员，可通过类名直接调用    基本概念 类：是抽象的数据类型模板，定义了对象的属性（数据成员）和行为（成员函数），描述了一类对象的共同特征。 对象：是类的具体实例，占用实际内存，拥有类定义的属性和行为。  核心特性：封装 封装是面向对象的三大特性之一，核心是”隐藏实现细节，暴露公共接口“，通过访问空字符实现     访问控制符 可访问范围 作用    public 类内、类外、派生类 暴露接口（如成员函数），供外部调用   private 仅类内和友元 隐藏数据成员和内部实现（核心封装）   protected 类内、友元、派生类（不允许类外访问） 为继承预留（派生类可访问父类受保护成员）    封装的意义： 数据安全：防止外部随意修改内部数据 代码维护性：内部实现修改时，...</div></div></div></a><a class="pagination-related" href="/posts/eed757dd.html" title="指针与引用"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">指针与引用</div></div><div class="info-2"><div class="info-item-1"> 指针：  野指针：未初始化&#x2F;已释放的指针（内存访问错误） 空指针：nullptr 函数指针：int (*func_ptr)(int, int)（指向函数的指针，可作为参数&#x2F;返回值，实现回调） 指针数组和数组指针： []优先级高于*，()会提高优先级 指针数组：类型* 数组名[数组长度];（[] 优先级高于 *，因此先构成数组，再说明元素是指针） 数组指针：类型 (*指针名)[数组长度];（() 提升 * 的优先级，先说明是指针，再指向一个数组）     引用：  必须初始化，不可改指向，无空引用，sizeof(ref)&#x3D;sizeof(原变量) 与指针的区别：语法（无*&#x2F;&amp;操作）、语义（绑定实体，非对象） 应用：函数返回值（返回全局 &#x2F; 静态变量引用，避免拷贝）   两者访问效率基本相同  需空值、动态指向、多级访问 → 用指针；  需简洁语法、确保有效、避免误操作 → 用引用。   本质 指针：本质是存储内存地址的变量 引用：本质是变量的别名（编译器层面通常用指针实现，但语法上无独立内存）  对比   特性 指针（Poi...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/mmexport1739965952317..jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Sean</div><div class="author-info-description">像风走了八千里，不问归期</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">基本类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E5%90%88%E7%B1%BB%E5%9E%8B%EF%BC%88%E6%B4%BE%E7%94%9F%E7%B1%BB%E5%9E%8B%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">复合类型（派生类型）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8C%87%E9%92%88"><span class="toc-number">1.2.1.</span> <span class="toc-text">指针</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BC%95%E7%94%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">引用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">1.2.3.</span> <span class="toc-text">结构体</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%81%94%E5%90%88%E4%BD%93"><span class="toc-number">1.2.4.</span> <span class="toc-text">联合体</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE"><span class="toc-number">1.2.5.</span> <span class="toc-text">枚举</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.3.</span> <span class="toc-text">自定义类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">2.</span> <span class="toc-text">变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">2.1.</span> <span class="toc-text">变量定义与初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E7%B1%BB%E5%88%AB%EF%BC%88%E5%85%B3%E9%94%AE%E5%AD%97%E4%BF%AE%E9%A5%B0%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">存储类别（关键字修饰）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#auto%EF%BC%88%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC%EF%BC%8CC-11%EF%BC%89"><span class="toc-number">2.2.1.</span> <span class="toc-text">auto（类型推导，C++11）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#static%EF%BC%88%E9%9D%99%E6%80%81%E5%AD%98%E5%82%A8%EF%BC%89"><span class="toc-number">2.2.2.</span> <span class="toc-text">static（静态存储）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#extern%EF%BC%88%E5%A4%96%E9%83%A8%E5%A3%B0%E6%98%8E%EF%BC%89"><span class="toc-number">2.2.3.</span> <span class="toc-text">extern（外部声明）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#register%EF%BC%88%E5%AD%98%E5%82%A8%E5%99%A8%E5%AD%98%E5%82%A8%EF%BC%8CC-17%E5%90%8E%E5%BC%83%E7%94%A8%EF%BC%89"><span class="toc-number">2.2.4.</span> <span class="toc-text">register（存储器存储，C++17后弃用）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#mutable%EF%BC%88%E6%98%93%E5%8F%98%E7%9A%84%EF%BC%89"><span class="toc-number">2.2.5.</span> <span class="toc-text">mutable（易变的）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#volatile%EF%BC%88%E7%A6%81%E6%AD%A2%E7%BC%96%E8%AF%91%E5%99%A8%E4%BC%98%E5%8C%96%EF%BC%89"><span class="toc-number">2.2.6.</span> <span class="toc-text">volatile（禁止编译器优化）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%97%AE%E7%AD%94"><span class="toc-number">2.2.7.</span> <span class="toc-text">问答</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F"><span class="toc-number">2.3.</span> <span class="toc-text">常量</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#const"><span class="toc-number">2.3.1.</span> <span class="toc-text">const</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#constexpr%EF%BC%88C-11%EF%BC%8C%E7%BC%96%E8%AF%91%E5%99%A8%E5%B8%B8%E9%87%8F%EF%BC%89"><span class="toc-number">2.3.2.</span> <span class="toc-text">constexpr（C++11，编译器常量）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.4.</span> <span class="toc-text">类型转换</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9A%90%E5%BC%8F%E8%BD%AC%E6%8D%A2%EF%BC%88%E8%87%AA%E5%8A%A8%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-number">2.4.1.</span> <span class="toc-text">隐式转换（自动转换）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%98%BE%E5%BC%8F%E8%BD%AC%E6%8D%A2%EF%BC%88%E5%9B%9B%E7%A7%8D%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-number">2.4.2.</span> <span class="toc-text">显式转换（四种强制转换）</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/52c049c7.html" title="数据类型与变量">数据类型与变量</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/dc2fae3c.html" title="运算符与表达式">运算符与表达式</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1111c3f5.html" title="函数基础">函数基础</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/43ae7cb1.html" title="程序结构与预处理">程序结构与预处理</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/6ea8b1ca.html" title="友元与运算符重载">友元与运算符重载</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Sean</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><script src="/js/tw_cn.js?v=5.5.1"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索关键词..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.1"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/miku.model.json"},"display":{"position":"left","width":200,"height":350,"hOffset":-15,"vOffset":-15},"mobile":{"show":true},"react":{"opacity":0.8},"log":false});</script></body></html>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">Sean</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/posts/52c049c7.html">http://example.com/posts/52c049c7.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">肖恩的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/%E5%8F%98%E9%87%8F/">变量</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">数据类型</a></div><div class="post-share"><div class="social-share" data-image="/img/mmexport1739965952317..jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/43ae7cb1.html" title="程序结构与预处理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">程序结构与预处理</div></div><div class="info-2"><div class="info-item-1">核心要点速览 程序入口：main 函数（返回值 int，return 0 表示正常退出） 核心预处理指令：#include（头文件包含）、#define（宏定义）、条件编译（#ifdef&#x2F;#ifndef&#x2F;endif）、#pragma once（头文件防重复包含） 核心流程：预处理→编译→汇编→链接→执行   一、程序结构 执行流程：预处理→编译→汇编→链接→执行 预处理是编译的第一个阶段，由预处理器处理所有以 #开头的指令，生成 “预处理后的源代码” 预处理核心操作：消除注释、展开宏、处理条件编译、引入头文件内容   二、预处理指令详解2.1 #include：头文件包含 #include &lt;header&gt;：优先搜索系统标准头文件目录（如/usr/include），用于引入标准库（如&lt;iostream&gt;、&lt;vector&gt;） #include &quot;header&quot;：优先搜索当前源文件所在目录，再搜索系统目录，用于引入自定义头文件（如&quot;myfunc.h&quot;）  2.2 #define：宏定义宏定...</div></div></div></a><a class="pagination-related" href="/posts/1111c3f5.html" title="函数基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">函数基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 声明与定义：可多次声明，仅能一次定义；原型需匹配参数类型 &#x2F; 个数（返回类型不影响） 参数传递：值传递（拷贝，不影响实参）、引用传递（别名，无拷贝）、指针传递（地址，支持 nullptr） 函数重载：同名 + 参数列表不同（类型 &#x2F; 个数 &#x2F; 顺序），返回类型不参与重载 内联函数：inline 修饰，建议编译器嵌入调用处（适合短函数，无循环 &#x2F; 递归） 默认参数：遵循 “靠右原则”，不可跳过右侧参数省略左侧 返回值：禁止返回局部变量引用；大型对象返回有 RVO&#x2F;NRVO 优化   一、函数的声明与定义核心概念 声明：告知编译器函数的 “存在及原型”（返回类型、函数名、参数类型 &#x2F; 个数），不包含实现；参数名可选（仅声明时）。 用途：解决 “调用在前、定义在后” 的编译错误，如int add(int, int);   定义：包含声明 + 函数体（具体实现），编译器会分配内存生成指令。  关键规则 单定义原则（ODR）：一个函数可在多个文件中声明，但仅能在一个文件中定义（否则链接报错 “重复定义”）。 原型匹配...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/dc2fae3c.html" title="运算符与表达式"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">运算符与表达式</div></div><div class="info-2"><div class="info-item-1">核心要点速览 逻辑运算符（&amp;&amp;&#x2F;||）：支持短路求值，右操作数可能不执行（面试高频陷阱） 逗号运算符（,）：按左到右执行多个表达式，返回最后一个值，优先级最低 右结合运算符：赋值运算符（=）、条件运算符（?:）、单目运算符，优先级相同时从右到左执行   一、逻辑运算符的短路求值（&amp;&amp; &#x2F; ||）核心规则短路求值是逻辑运算符的优化特性，仅在必要时计算右操作数，直接影响代码执行结果。  &amp;&amp;（逻辑与）：左操作数为false时，直接返回false，右操作数不执行。 ||（逻辑或）：左操作数为true时，直接返回true，右操作数不执行。  常见场景（含副作用表达式） &amp;&amp;短路示例：   123int i = 0;bool res = (i == 1) &amp;&amp; (++i); // 左为false，右++i不执行// 结果：res=false，i=0（而非1）  ||短路示例：   123int j = 0;bool res = (j == 0) || (++j); // 左为true，右++...</div></div></div></a><a class="pagination-related" href="/posts/1111c3f5.html" title="函数基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">函数基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 声明与定义：可多次声明，仅能一次定义；原型需匹配参数类型 &#x2F; 个数（返回类型不影响） 参数传递：值传递（拷贝，不影响实参）、引用传递（别名，无拷贝）、指针传递（地址，支持 nullptr） 函数重载：同名 + 参数列表不同（类型 &#x2F; 个数 &#x2F; 顺序），返回类型不参与重载 内联函数：inline 修饰，建议编译器嵌入调用处（适合短函数，无循环 &#x2F; 递归） 默认参数：遵循 “靠右原则”，不可跳过右侧参数省略左侧 返回值：禁止返回局部变量引用；大型对象返回有 RVO&#x2F;NRVO 优化   一、函数的声明与定义核心概念 声明：告知编译器函数的 “存在及原型”（返回类型、函数名、参数类型 &#x2F; 个数），不包含实现；参数名可选（仅声明时）。 用途：解决 “调用在前、定义在后” 的编译错误，如int add(int, int);   定义：包含声明 + 函数体（具体实现），编译器会分配内存生成指令。  关键规则 单定义原则（ODR）：一个函数可在多个文件中声明，但仅能在一个文件中定义（否则链接报错 “重复定义”）。 原型匹配...</div></div></div></a><a class="pagination-related" href="/posts/43ae7cb1.html" title="程序结构与预处理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">程序结构与预处理</div></div><div class="info-2"><div class="info-item-1">核心要点速览 程序入口：main 函数（返回值 int，return 0 表示正常退出） 核心预处理指令：#include（头文件包含）、#define（宏定义）、条件编译（#ifdef&#x2F;#ifndef&#x2F;endif）、#pragma once（头文件防重复包含） 核心流程：预处理→编译→汇编→链接→执行   一、程序结构 执行流程：预处理→编译→汇编→链接→执行 预处理是编译的第一个阶段，由预处理器处理所有以 #开头的指令，生成 “预处理后的源代码” 预处理核心操作：消除注释、展开宏、处理条件编译、引入头文件内容   二、预处理指令详解2.1 #include：头文件包含 #include &lt;header&gt;：优先搜索系统标准头文件目录（如/usr/include），用于引入标准库（如&lt;iostream&gt;、&lt;vector&gt;） #include &quot;header&quot;：优先搜索当前源文件所在目录，再搜索系统目录，用于引入自定义头文件（如&quot;myfunc.h&quot;）  2.2 #define：宏定义宏定...</div></div></div></a><a class="pagination-related" href="/posts/eed757dd.html" title="指针与引用"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">指针与引用</div></div><div class="info-2"><div class="info-item-1">核心要点速览 指针：存储内存地址的变量，支持空值（nullptr）、动态指向、多级访问，存在野指针风险 引用：变量的别名，必须初始化、不可改指向、无空引用，语法简洁安全 访问效率：两者基本一致 适用场景：需空值 &#x2F; 动态指向 &#x2F; 多级访问用指针；需简洁语法 &#x2F; 确保有效 &#x2F; 避免误操作引用   一、指针指针本质是 “存储内存地址的变量”，支持对内存的间接访问。 1. 关键类型与特性（1）野指针 定义：未初始化、已释放或越界访问的指针（指向随机 &#x2F; 无效内存）。  风险：访问野指针会导致内存错误（崩溃、数据错乱），是常见 bug 来源。  示例（错误）：   12int* p; // 未初始化，野指针*p = 10; // 未定义行为（访问随机内存）  规避：指针定义时立即初始化（如int* p = nullptr;），释放后及时置空（p = nullptr;）。   （2）空指针（nullptr） 定义：C++11 标准的空指针常量，替代旧版NULL（NULL本质是0，易引发歧义）。  用途：表示指针 “无指向”，避免野指针，可通...</div></div></div></a><a class="pagination-related" href="/posts/5f08cd61.html" title="字符串基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">字符串基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 C 风格字符串：以&#39;\0&#39;结尾的字符数组，依赖cstring库函数，无安全检查（易溢出） C++ std::string：动态管理、安全便捷，支持 SSO（小字符串优化），提供丰富成员方法 拷贝关键：C 语言strcpy不安全、strncpy需补&#39;\0&#39;、strlcpy安全非标准；C++ 直接用拷贝构造 &#x2F; 赋值 &#x2F;assign   一、C 风格字符串（char[]）本质是以&#39;\0&#39;（空字符）为结束标记的字符数组，&#39;\0&#39;是字符串终止的核心标识。 1. 初始化（高频易错点）1234567// 正确写法char str1[] = &quot;hello&quot;;  // 自动添加&#x27;\0&#x27;，数组长度6（h e l l o \0）char str2[] = &#123;&#x27;h&#x27;,&#x27;i&#x27;,&#x27;\0&#x27;&#125;;  // 手动添加&#x27;\0&#x27;，长度3char str3[10] = &quot;hi...</div></div></div></a><a class="pagination-related" href="/posts/6e08d78f.html" title="STL基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">STL基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 核心组件：容器（存储数据）、算法（操作数据）、迭代器（容器与算法桥梁）、仿函数（自定义逻辑）、适配器（接口转换） 容器分类：序列式（vector&#x2F;list&#x2F;deque）、关联式（map&#x2F;set 等，红黑树 &#x2F; 哈希表实现）、适配器（stack&#x2F;queue&#x2F;priority_queue） 关键考点：容器底层实现、迭代器失效场景、容器选型对比、算法适用条件   一、STL 核心组件 容器（Containers）：类模板，封装数据结构（如 vector、map），用于存储数据。 算法（Algorithms）：函数模板，实现通用操作（如 sort、find），通过迭代器操作容器。 迭代器（Iterators）：类似指针的对象，提供容器元素访问接口，是容器与算法的桥梁。 仿函数（Functors）：重载operator()的类 &#x2F; 结构体（函数对象），用于算法自定义逻辑（如比较、谓词）。 适配器（Adapters）：转换已有组件接口（如 stack&#x2F;queue 基于 deque 适配，priori...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/mmexport1739965952317..jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Sean</div><div class="author-info-description">像风走了八千里，不问归期</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E8%A6%81%E7%82%B9%E9%80%9F%E8%A7%88"><span class="toc-number">1.</span> <span class="toc-text">核心要点速览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">一、数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text">1.1 基本类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E8%A1%A5%E5%85%85"><span class="toc-number">2.1.1.</span> <span class="toc-text">关键补充</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%A4%8D%E5%90%88%E7%B1%BB%E5%9E%8B%EF%BC%88%E6%B4%BE%E7%94%9F%E7%B1%BB%E5%9E%8B%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">1.2 复合类型（派生类型）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%87%E9%92%88"><span class="toc-number">2.2.1.</span> <span class="toc-text">指针</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%95%E7%94%A8"><span class="toc-number">2.2.2.</span> <span class="toc-text">引用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%88Struct%EF%BC%89"><span class="toc-number">2.2.3.</span> <span class="toc-text">结构体（Struct）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%81%94%E5%90%88%E4%BD%93%EF%BC%88Union%EF%BC%89"><span class="toc-number">2.2.4.</span> <span class="toc-text">联合体（Union）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9E%9A%E4%B8%BE%EF%BC%88Enum%EF%BC%89"><span class="toc-number">2.2.5.</span> <span class="toc-text">枚举（Enum）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E8%87%AA%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.3.</span> <span class="toc-text">1.3 自定义类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8F%98%E9%87%8F"><span class="toc-number">3.</span> <span class="toc-text">二、变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%8F%98%E9%87%8F%E7%9A%84%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">3.1.</span> <span class="toc-text">2.1 变量的定义与初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%AD%98%E5%82%A8%E7%B1%BB%E5%88%AB%EF%BC%88%E5%85%B3%E9%94%AE%E5%AD%97%E4%BF%AE%E9%A5%B0%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">2.2 存储类别（关键字修饰）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E7%AD%94"><span class="toc-number">3.3.</span> <span class="toc-text">2.3 常见问题解答</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E5%B8%B8%E9%87%8F"><span class="toc-number">3.4.</span> <span class="toc-text">2.4 常量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#const%EF%BC%88%E5%8F%AA%E8%AF%BB%E5%B8%B8%E9%87%8F%EF%BC%89"><span class="toc-number">3.4.1.</span> <span class="toc-text">const（只读常量）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#constexpr%EF%BC%88%E7%BC%96%E8%AF%91%E6%9C%9F%E5%B8%B8%E9%87%8F%EF%BC%8CC-11%EF%BC%89"><span class="toc-number">3.4.2.</span> <span class="toc-text">constexpr（编译期常量，C++11）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">3.5.</span> <span class="toc-text">2.5 类型转换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9A%90%E5%BC%8F%E8%BD%AC%E6%8D%A2%EF%BC%88%E8%87%AA%E5%8A%A8%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-number">3.5.1.</span> <span class="toc-text">隐式转换（自动转换）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%98%BE%E5%BC%8F%E8%BD%AC%E6%8D%A2%EF%BC%88%E5%9B%9B%E7%A7%8D%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-number">3.5.2.</span> <span class="toc-text">显式转换（四种强制转换）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E9%97%AE%E9%A2%98"><span class="toc-number">3.5.3.</span> <span class="toc-text">关键问题</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/dc2fae3c.html" title="运算符与表达式">运算符与表达式</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1111c3f5.html" title="函数基础">函数基础</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/52c049c7.html" title="数据类型与变量">数据类型与变量</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/43ae7cb1.html" title="程序结构与预处理">程序结构与预处理</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/eed757dd.html" title="指针与引用">指针与引用</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Sean</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><script src="/js/tw_cn.js?v=5.5.1"></script><div class="js-pjax"></div><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索关键词..." type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.1"></script></div></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/miku.model.json"},"display":{"position":"left","width":200,"height":350,"hOffset":-15,"vOffset":-15},"mobile":{"show":true},"react":{"opacity":0.8},"log":false});</script></body></html>
