@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>STL基础 | 肖恩的博客</title><meta name="author" content="Sean"><meta name="copyright" content="Sean"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="核心要点速览 核心组件：容器（存储数据）、算法（操作数据）、迭代器（容器与算法桥梁）、仿函数（自定义逻辑）、适配器（接口转换） 容器分类：序列式（vector&#x2F;list&#x2F;deque）、关联式（map&#x2F;set 等，红黑树 &#x2F; 哈希表实现）、适配器（stack&#x2F;queue&#x2F;priority_queue） 关键考点：容器底层实现、迭代器失效场景">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>模板与STL：STL | 肖恩的博客</title><meta name="author" content="Sean"><meta name="copyright" content="Sean"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="核心要点速览 组件：容器（存储）、算法（操作）、迭代器（桥梁）、仿函数（自定义逻辑）、适配器（接口转换）、分配器（内存管理） 容器分类：序列式（vector&#x2F;list&#x2F;deque）、关联式（有序红黑树 &#x2F; 无序哈希表）、适配器（stack&#x2F;queue&#x2F;priority_queue） 关键：底层实现、迭代器失效、容器选型、算法适用条件、内存与效率权衡">
 <meta property="og:type" content="article">
-<meta property="og:title" content="STL基础">
+<meta property="og:title" content="模板与STL：STL">
 <meta property="og:url" content="https://devilsean.github.io/posts/6e08d78f.html">
 <meta property="og:site_name" content="肖恩的博客">
-<meta property="og:description" content="核心要点速览 核心组件：容器（存储数据）、算法（操作数据）、迭代器（容器与算法桥梁）、仿函数（自定义逻辑）、适配器（接口转换） 容器分类：序列式（vector&#x2F;list&#x2F;deque）、关联式（map&#x2F;set 等，红黑树 &#x2F; 哈希表实现）、适配器（stack&#x2F;queue&#x2F;priority_queue） 关键考点：容器底层实现、迭代器失效场景">
+<meta property="og:description" content="核心要点速览 组件：容器（存储）、算法（操作）、迭代器（桥梁）、仿函数（自定义逻辑）、适配器（接口转换）、分配器（内存管理） 容器分类：序列式（vector&#x2F;list&#x2F;deque）、关联式（有序红黑树 &#x2F; 无序哈希表）、适配器（stack&#x2F;queue&#x2F;priority_queue） 关键：底层实现、迭代器失效、容器选型、算法适用条件、内存与效率权衡">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://devilsean.github.io/img/cover.jpg">
 <meta property="article:published_time" content="2025-10-29T07:30:00.000Z">
-<meta property="article:modified_time" content="2025-10-30T01:24:20.093Z">
+<meta property="article:modified_time" content="2025-11-30T06:33:53.558Z">
 <meta property="article:author" content="Sean">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="STL">
@@ -16,11 +16,11 @@
 <meta name="twitter:image" content="https://devilsean.github.io/img/cover.jpg"><script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "STL基础",
+  "headline": "模板与STL：STL",
   "url": "https://devilsean.github.io/posts/6e08d78f.html",
   "image": "https://devilsean.github.io/img/cover.jpg",
   "datePublished": "2025-10-29T07:30:00.000Z",
-  "dateModified": "2025-10-30T01:24:20.093Z",
+  "dateModified": "2025-11-30T06:33:53.558Z",
   "author": [
     {
       "@type": "Person",
@@ -157,180 +157,247 @@
   },
   autoDarkmode: false
 }</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: 'STL基础',
+  title: '模板与STL：STL',
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/animate.min.css" media="print" onload="this.media='screen'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">32</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">49</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-info-circle"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/./img/cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">肖恩的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">STL基础</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-info-circle"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">STL基础</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-30T01:24:20.093Z" title="更新于 2025-10-30 09:24:20">2025-10-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C/">C++</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C/5-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">5. 模板与STL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="核心要点速览"><a href="#核心要点速览" class="headerlink" title="核心要点速览"></a>核心要点速览</h2><ul>
-<li>核心组件：容器（存储数据）、算法（操作数据）、迭代器（容器与算法桥梁）、仿函数（自定义逻辑）、适配器（接口转换）</li>
-<li>容器分类：序列式（vector&#x2F;list&#x2F;deque）、关联式（map&#x2F;set 等，红黑树 &#x2F; 哈希表实现）、适配器（stack&#x2F;queue&#x2F;priority_queue）</li>
-<li>关键考点：容器底层实现、迭代器失效场景、容器选型对比、算法适用条件</li>
+}</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-card-history/baiduhistory/css/main.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-categories-card@1.0.0/lib/categorybar.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/animate.min.css" media="print" onload="this.media='screen'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">32</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">49</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-info-circle"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/./img/cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">肖恩的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">模板与STL：STL</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-info-circle"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">模板与STL：STL</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-11-30T06:33:53.558Z" title="更新于 2025-11-30 14:33:53">2025-11-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C/">C++</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="核心要点速览"><a href="#核心要点速览" class="headerlink" title="核心要点速览"></a>核心要点速览</h2><ul>
+<li>组件：容器（存储）、算法（操作）、迭代器（桥梁）、仿函数（自定义逻辑）、适配器（接口转换）、分配器（内存管理）</li>
+<li>容器分类：序列式（vector&#x2F;list&#x2F;deque）、关联式（有序红黑树 &#x2F; 无序哈希表）、适配器（stack&#x2F;queue&#x2F;priority_queue）</li>
+<li>关键：底层实现、迭代器失效、容器选型、算法适用条件、内存与效率权衡</li>
 </ul>
 <hr>
-<h2 id="一、STL-核心组件"><a href="#一、STL-核心组件" class="headerlink" title="一、STL 核心组件"></a>一、STL 核心组件</h2><ol>
-<li><strong>容器（Containers）</strong>：类模板，封装数据结构（如 vector、map），用于存储数据。</li>
-<li><strong>算法（Algorithms）</strong>：函数模板，实现通用操作（如 sort、find），通过迭代器操作容器。</li>
-<li><strong>迭代器（Iterators）</strong>：类似指针的对象，提供容器元素访问接口，是容器与算法的桥梁。</li>
-<li><strong>仿函数（Functors）</strong>：重载<code>operator()</code>的类 &#x2F; 结构体（函数对象），用于算法自定义逻辑（如比较、谓词）。</li>
-<li><strong>适配器（Adapters）</strong>：转换已有组件接口（如 stack&#x2F;queue 基于 deque 适配，priority_queue 基于 vector 适配）。</li>
+<h2 id="一、STL-组件"><a href="#一、STL-组件" class="headerlink" title="一、STL 组件"></a>一、STL 组件</h2><ol>
+<li><strong>容器</strong>：类模板，封装数据结构（如 vector&#x2F;map），存储数据的载体。</li>
+<li><strong>算法</strong>：函数模板，提供通用操作（sort&#x2F;find），通过迭代器操作容器。</li>
+<li><strong>迭代器</strong>：类似指针的对象，提供元素访问接口，是容器与算法的桥梁。</li>
+<li><strong>仿函数</strong>：重载<code>operator()</code>的类 &#x2F; 结构体（函数对象），传递自定义逻辑（比较 &#x2F; 筛选）。</li>
+<li><strong>适配器</strong>：转换已有组件接口（含容器适配器、迭代器适配器如 reverse_iterator、函数适配器如 bind），如 stack 基于 deque 适配。</li>
+<li><strong>分配器</strong>：默认<code>std::allocator</code>，核心接口含<code>allocate</code>（分配）&#x2F;<code>deallocate</code>（释放）&#x2F;<code>construct</code>（构造）&#x2F;<code>destroy</code>（析构）；自定义分配器可优化内存碎片（极少使用）。</li>
 </ol>
 <hr>
-<h2 id="二、容器：分类与核心特性"><a href="#二、容器：分类与核心特性" class="headerlink" title="二、容器：分类与核心特性"></a>二、容器：分类与核心特性</h2><p>容器按存储结构分为序列式、关联式、适配器三类，核心考察底层实现、操作效率、适用场景。</p>
-<h3 id="1-序列式容器（元素有序，依赖位置）"><a href="#1-序列式容器（元素有序，依赖位置）" class="headerlink" title="1. 序列式容器（元素有序，依赖位置）"></a>1. 序列式容器（元素有序，依赖位置）</h3><h4 id="vector：动态数组"><a href="#vector：动态数组" class="headerlink" title="vector：动态数组"></a>vector：动态数组</h4><ul>
-<li>底层实现：连续动态数组，内存地址连续。</li>
-<li>核心特性：<ul>
-<li>随机访问高效（<code>[]</code>&#x2F;<code>at()</code>，<code>O(1)</code>）；尾部增删高效（<code>push_back()</code>&#x2F;<code>pop_back()</code>，<code>O(1)</code>）。</li>
-<li>动态扩容：容量不足时申请 1.5&#x2F;2 倍新内存，拷贝旧元素（扩容成本高）。</li>
-<li>中间 &#x2F; 头部增删低效（需移动元素，<code>O(n)</code>）。</li>
-</ul>
-</li>
-<li>关键接口：<code>reserve(n)</code>（预分配内存，不改变 size）、<code>resize(n, val)</code>（调整 size，可能扩容）、<code>erase(iter)</code>（返回下一个有效迭代器）。</li>
-<li>适用场景：频繁随机访问、尾部增删（如列表数据、缓存）。</li>
-</ul>
-<h4 id="list：双向链表"><a href="#list：双向链表" class="headerlink" title="list：双向链表"></a>list：双向链表</h4><ul>
-<li>底层实现：双向链表（节点含数据、前驱 &#x2F; 后继指针），内存不连续。</li>
-<li>核心特性：<ul>
-<li>随机访问低效（遍历，<code>O(n)</code>），不支持<code>[]</code>访问。</li>
-<li>任意位置增删高效（修改指针，<code>O(1)</code>，需先定位）。</li>
-<li>迭代器为双向迭代器（支持<code>++</code>&#x2F;<code>--</code>，不支持<code>+n</code>）。</li>
-</ul>
-</li>
-<li>适用场景：频繁中间增删（如链表、非 FIFO 队列）。</li>
-</ul>
-<h4 id="deque：双端队列"><a href="#deque：双端队列" class="headerlink" title="deque：双端队列"></a>deque：双端队列</h4><ul>
-<li>底层实现：分段连续动态数组（多个缓冲区 + 中控器指针数组）。</li>
-<li>核心特性：<ul>
-<li>头尾增删高效（<code>push_front()</code>&#x2F;<code>pop_front()</code>，<code>O(1)</code>）。</li>
-<li>随机访问效率：高于 list，低于 vector（<code>O(1)</code>，需中控器定位）。</li>
-<li>扩容成本低于 vector（新增缓冲区，无需拷贝全部元素）。</li>
-</ul>
-</li>
-<li>适用场景：双端操作队列（如 BFS 队列）。</li>
-</ul>
-<h3 id="2-关联式容器（元素无序，依赖键值）"><a href="#2-关联式容器（元素无序，依赖键值）" class="headerlink" title="2. 关联式容器（元素无序，依赖键值）"></a>2. 关联式容器（元素无序，依赖键值）</h3><p>分为有序（红黑树）和无序（哈希表）两类，核心考察查找效率、有序性、内存占用。</p>
-<h4 id="有序关联容器（红黑树实现，O-logn-操作）"><a href="#有序关联容器（红黑树实现，O-logn-操作）" class="headerlink" title="有序关联容器（红黑树实现，O(logn)操作）"></a>有序关联容器（红黑树实现，<code>O(logn)</code>操作）</h4><ul>
-<li>包含：<code>set</code>（唯一键）、<code>multiset</code>（键可重复）、<code>map</code>（键值对，键唯一）、<code>multimap</code>（键可重复）。</li>
-<li>核心特性：<ul>
-<li>按键升序排列（默认<code>less&lt;Key&gt;</code>），支持范围查询（<code>lower_bound</code>&#x2F;<code>upper_bound</code>）。</li>
-<li>迭代器为双向迭代器，遍历有序。</li>
-<li>插入 &#x2F; 删除 &#x2F; 查找时间复杂度稳定<code>O(logn)</code>。</li>
-</ul>
-</li>
-</ul>
-<h4 id="无序关联容器（哈希表实现，平均O-1-操作）"><a href="#无序关联容器（哈希表实现，平均O-1-操作）" class="headerlink" title="无序关联容器（哈希表实现，平均O(1)操作）"></a>无序关联容器（哈希表实现，平均<code>O(1)</code>操作）</h4><ul>
-<li>包含：<code>unordered_set</code>（唯一键）、<code>unordered_multiset</code>（键可重复）、<code>unordered_map</code>（键值对，键唯一）、<code>unordered_multimap</code>（键可重复）。</li>
-<li>核心特性：<ul>
-<li>元素无序，迭代器为前向迭代器（仅支持<code>++</code>）。</li>
-<li>平均插入 &#x2F; 删除 &#x2F; 查找<code>O(1)</code>，最坏<code>O(n)</code>（哈希冲突严重）。</li>
-<li>自定义键需特化<code>std::hash</code>哈希函数。</li>
-</ul>
-</li>
-</ul>
-<h4 id="map-vs-unordered-map"><a href="#map-vs-unordered-map" class="headerlink" title="map vs unordered_map"></a><code>map</code> vs <code>unordered_map</code></h4><table>
+<h2 id="二、容器：分类、特性与选型"><a href="#二、容器：分类、特性与选型" class="headerlink" title="二、容器：分类、特性与选型"></a>二、容器：分类、特性与选型</h2><h3 id="1-序列式容器（元素有序，依赖位置）"><a href="#1-序列式容器（元素有序，依赖位置）" class="headerlink" title="1. 序列式容器（元素有序，依赖位置）"></a>1. 序列式容器（元素有序，依赖位置）</h3><table>
 <thead>
 <tr>
-<th>对比维度</th>
+<th>容器</th>
+<th>底层实现</th>
+<th>特性</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>vector</td>
+<td>连续动态数组</td>
+<td>随机访问 O (1)，尾部增删 O (1)；扩容 1.5&#x2F;2 倍（GCC&#x2F;MSVC），中间增删 O (n)；支持<code>reserve()</code>&#x2F;<code>resize()</code>；<code>emplace_back()</code>比<code>push_back()</code>高效（直接构造，避免拷贝）</td>
+<td>频繁随机访问、尾部增删（列表 &#x2F; 缓存）</td>
+</tr>
+<tr>
+<td>list</td>
+<td>双向链表</td>
+<td>任意位置增删 O (1)（需定位），随机访问 O (n)；支持<code>merge()</code>&#x2F;<code>splice()</code>（多重载，转移元素无需拷贝，O (1) 效率）；双向迭代器</td>
+<td>频繁中间增删（链表 &#x2F; 非 FIFO 队列）</td>
+</tr>
+<tr>
+<td>deque</td>
+<td>分段连续数组（缓冲区 + 中控器）</td>
+<td>头尾增删 O (1)，随机访问 O (1)（略低于 vector）；扩容无需拷贝全部元素；无<code>capacity()</code>成员（分段存储无连续容量概念）；中间插入迭代器全失效；排序缓存命中率低，建议转 vector 排序</td>
+<td>双端操作（BFS 队列）</td>
+</tr>
+</tbody></table>
+<h3 id="2-关联式容器（元素无序，依赖键值）"><a href="#2-关联式容器（元素无序，依赖键值）" class="headerlink" title="2. 关联式容器（元素无序，依赖键值）"></a>2. 关联式容器（元素无序，依赖键值）</h3><h4 id="有序关联容器（红黑树，O-logn-操作）"><a href="#有序关联容器（红黑树，O-logn-操作）" class="headerlink" title="有序关联容器（红黑树，O (logn) 操作）"></a>有序关联容器（红黑树，O (logn) 操作）</h4><ul>
+<li>包含：set（唯一键）、multiset（键可重复）、map（键值对，键唯一）、multimap（键可重复）</li>
+<li>特性：按键升序排列（默认<code>less&lt;Key&gt;</code>），支持<code>lower_bound()</code>&#x2F;<code>upper_bound()</code>&#x2F;<code>equal_range()</code>；键为 const（不可修改），但可通过迭代器修改 map 的 value；<code>count()</code>返回键出现次数；双向迭代器</li>
+</ul>
+<h4 id="无序关联容器（哈希表，平均-O-1-操作）"><a href="#无序关联容器（哈希表，平均-O-1-操作）" class="headerlink" title="无序关联容器（哈希表，平均 O (1) 操作）"></a>无序关联容器（哈希表，平均 O (1) 操作）</h4><ul>
+<li>包含：unordered_set&#x2F;multiset、unordered_map&#x2F;multimap</li>
+<li>特性：元素无序，前向迭代器；负载因子默认 1.0，超阈值触发<code>rehash</code>（迭代器全失效）；哈希冲突默认用链表法解决（C++17 后部分实现用红黑树优化长链表）；自定义键需特化<code>std::hash</code>+<code>operator==</code></li>
+</ul>
+<h4 id="map-vs-unordered-map-对比"><a href="#map-vs-unordered-map-对比" class="headerlink" title="map vs unordered_map 对比"></a>map vs unordered_map 对比</h4><table>
+<thead>
+<tr>
+<th>维度</th>
 <th>map（红黑树）</th>
 <th>unordered_map（哈希表）</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>查找效率</td>
-<td><code>O(logn)</code>（稳定）</td>
-<td>平均<code>O(1)</code>，最坏<code>O(n)</code></td>
-</tr>
-<tr>
-<td>内存占用</td>
-<td>较低（仅键值对 + 树结构）</td>
-<td>较高（哈希表需额外空间解决冲突）</td>
+<td>O (logn)（稳定）</td>
+<td>平均 O (1)，最坏 O (n)（冲突严重）</td>
 </tr>
 <tr>
 <td>有序性</td>
-<td>支持（按键升序）</td>
+<td>支持（升序）</td>
 <td>不支持</td>
 </tr>
 <tr>
-<td>迭代器类型</td>
-<td>双向迭代器（<code>++</code>&#x2F;<code>--</code>）</td>
-<td>前向迭代器（仅<code>++</code>）</td>
+<td>内存占用</td>
+<td>较低</td>
+<td>较高（冲突解决需额外空间）</td>
 </tr>
 <tr>
-<td>适用场景</td>
-<td>有序遍历、范围查询</td>
-<td>频繁查找，不关心顺序</td>
+<td>迭代器</td>
+<td>双向</td>
+<td>前向</td>
+</tr>
+<tr>
+<td>键值操作</td>
+<td><code>[]</code>会默认构造不存在的键；可通过<code>replace()</code>修改 value</td>
+<td><code>[]</code>行为同 map，需避免误触发默认构造</td>
 </tr>
 </tbody></table>
 <h3 id="3-容器适配器（接口转换）"><a href="#3-容器适配器（接口转换）" class="headerlink" title="3. 容器适配器（接口转换）"></a>3. 容器适配器（接口转换）</h3><ul>
-<li><code>stack</code>：栈（LIFO），默认底层<code>deque</code>，接口：<code>push()</code>&#x2F;<code>pop()</code>&#x2F;<code>top()</code>。</li>
-<li><code>queue</code>：队列（FIFO），默认底层<code>deque</code>，接口：<code>push()</code>&#x2F;<code>pop()</code>&#x2F;<code>front()</code>&#x2F;<code>back()</code>。</li>
-<li><code>priority_queue</code>：优先队列（最大堆），底层<code>vector</code>+ 堆算法，接口：<code>push()</code>&#x2F;<code>pop()</code>&#x2F;<code>top()</code>。</li>
+<li>stack（LIFO）：默认底层 deque，可指定 vector 为底层（<code>stack&lt;int, vector&lt;int&gt;&gt;</code>），接口<code>push()</code>&#x2F;<code>pop()</code>&#x2F;<code>top()</code>；支持<code>emplace()</code>直接构造元素</li>
+<li>queue（FIFO）：默认底层 deque，接口<code>push()</code>&#x2F;<code>pop()</code>&#x2F;<code>front()</code>&#x2F;<code>back()</code></li>
+<li>priority_queue（最大堆）：底层仅支持 vector&#x2F;deque（需随机访问迭代器），不可用 list；最小堆需指定<code>std::greater&lt;int&gt;</code>；无迭代器遍历功能</li>
 </ul>
 <hr>
 <h2 id="三、迭代器：类型与失效"><a href="#三、迭代器：类型与失效" class="headerlink" title="三、迭代器：类型与失效"></a>三、迭代器：类型与失效</h2><h3 id="1-迭代器类型（按功能划分）"><a href="#1-迭代器类型（按功能划分）" class="headerlink" title="1. 迭代器类型（按功能划分）"></a>1. 迭代器类型（按功能划分）</h3><table>
 <thead>
 <tr>
-<th>迭代器类型</th>
-<th>支持操作（除<code>++</code>外）</th>
+<th>类型</th>
+<th>支持操作</th>
 <th>对应容器示例</th>
 </tr>
 </thead>
 <tbody><tr>
 <td>输入迭代器</td>
-<td><code>*</code>（读）、<code>==</code>&#x2F;<code>!=</code></td>
-<td><code>istream_iterator</code></td>
+<td><code>*</code>（读）、&#x3D;&#x3D;&#x2F;!&#x3D;</td>
+<td>istream_iterator</td>
 </tr>
 <tr>
 <td>输出迭代器</td>
 <td><code>*</code>（写）</td>
-<td><code>ostream_iterator</code></td>
+<td>ostream_iterator</td>
 </tr>
 <tr>
 <td>前向迭代器</td>
-<td>输入 + 输出功能，支持多遍访问</td>
-<td><code>unordered_set</code>&#x2F;<code>unordered_map</code></td>
+<td>输入 + 输出，多遍访问</td>
+<td>unordered_set&#x2F;unordered_map</td>
 </tr>
 <tr>
 <td>双向迭代器</td>
 <td>前向功能 +<code>--</code></td>
-<td><code>list</code>、<code>map</code>、<code>set</code></td>
+<td>list、map、set</td>
 </tr>
 <tr>
 <td>随机访问迭代器</td>
 <td>双向功能 +<code>+n</code>&#x2F;<code>-n</code>&#x2F;<code>[]</code></td>
-<td><code>vector</code>、<code>deque</code>、数组</td>
+<td>vector、deque、数组</td>
 </tr>
 </tbody></table>
-<h3 id="2-迭代器失效场景"><a href="#2-迭代器失效场景" class="headerlink" title="2. 迭代器失效场景"></a>2. 迭代器失效场景</h3><h4 id="vector-迭代器失效"><a href="#vector-迭代器失效" class="headerlink" title="vector 迭代器失效"></a>vector 迭代器失效</h4><ul>
-<li>插入（<code>push_back</code>&#x2F;<code>insert</code>）：扩容则所有迭代器失效；未扩容则插入位置及之后失效。</li>
-<li>删除（<code>erase</code>）：删除位置及之后失效，需用<code>iter = vec.erase(iter)</code>更新迭代器。</li>
-</ul>
-<h4 id="list-迭代器失效"><a href="#list-迭代器失效" class="headerlink" title="list 迭代器失效"></a>list 迭代器失效</h4><ul>
-<li>插入：迭代器不失效（仅修改指针）。</li>
-<li>删除：仅被删除元素的迭代器失效，其余有效。</li>
-</ul>
-<h4 id="map-set-迭代器失效"><a href="#map-set-迭代器失效" class="headerlink" title="map&#x2F;set 迭代器失效"></a>map&#x2F;set 迭代器失效</h4><ul>
-<li>插入：迭代器不失效（红黑树调整不改变节点地址）。</li>
-<li>删除：仅被删除节点的迭代器失效，其余有效。</li>
+<h3 id="2-失效场景"><a href="#2-失效场景" class="headerlink" title="2. 失效场景"></a>2. 失效场景</h3><table>
+<thead>
+<tr>
+<th>容器</th>
+<th>插入操作</th>
+<th>删除操作</th>
+<th>其他失效场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>vector</td>
+<td>扩容则全失效，未扩容则插入位后失效</td>
+<td>删除位后失效（需<code>iter=erase(iter)</code>）</td>
+<td><code>reserve()</code>可能导致失效；<code>shrink_to_fit()</code>不必然失效</td>
+</tr>
+<tr>
+<td>list</td>
+<td>不失效</td>
+<td>仅被删元素迭代器失效</td>
+<td>-</td>
+</tr>
+<tr>
+<td>map&#x2F;set</td>
+<td>不失效</td>
+<td>仅被删节点迭代器失效</td>
+<td>-</td>
+</tr>
+<tr>
+<td>unordered_*</td>
+<td>未 rehash 则有效，rehash 全失效</td>
+<td>仅被删元素迭代器失效</td>
+<td><code>reserve()</code>&#x2F;<code>rehash()</code>全失效</td>
+</tr>
+<tr>
+<td>容器 swap</td>
+<td>无</td>
+<td>无</td>
+<td>vector 可能因内存交换失效；其他容器迭代器仍有效（指向原元素）</td>
+</tr>
+</tbody></table>
+<h3 id="3-迭代器特性"><a href="#3-迭代器特性" class="headerlink" title="3. 迭代器特性"></a>3. 迭代器特性</h3><ul>
+<li>算法通过<code>std::iterator_traits&lt;Iter&gt;</code>获取<code>value_type</code>（元素类型）、<code>difference_type</code>（迭代器差值）等，自定义迭代器需显式定义这些类型。</li>
+<li>反向迭代器（reverse_iterator）：<code>rbegin()</code>指向尾元素，<code>rend()</code>指向首元素前；<code>base()</code>方法转换为原迭代器时，位置偏移一位（如<code>rbegin().base() == end()</code>）。</li>
+<li>插入迭代器（back_insert_iterator 等）：通过<code>back_inserter(v)</code>生成，配合算法自动调用<code>push_back()</code>，避免手动管理迭代器位置。</li>
 </ul>
 <hr>
-<h2 id="四、算法：常用算法与适用条件"><a href="#四、算法：常用算法与适用条件" class="headerlink" title="四、算法：常用算法与适用条件"></a>四、算法：常用算法与适用条件</h2><h3 id="1-核心算法"><a href="#1-核心算法" class="headerlink" title="1. 核心算法"></a>1. 核心算法</h3><ul>
-<li><strong>排序</strong>：<code>sort(first, last)</code>，需随机访问迭代器（<code>vector</code>&#x2F;<code>deque</code>），底层是 introsort（快排 + 堆排 + 插入排序）。<ul>
-<li>注意：<code>list</code>不支持<code>std::sort</code>，需用成员函数<code>list::sort()</code>。</li>
+<h2 id="四、算法与仿函数"><a href="#四、算法与仿函数" class="headerlink" title="四、算法与仿函数"></a>四、算法与仿函数</h2><h3 id="1-常用算法"><a href="#1-常用算法" class="headerlink" title="1. 常用算法"></a>1. 常用算法</h3><table>
+<thead>
+<tr>
+<th>算法</th>
+<th>功能</th>
+<th>适用条件</th>
+<th>注意点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sort</td>
+<td>排序</td>
+<td>随机访问迭代器（vector&#x2F;deque）</td>
+<td>list 需用成员函数<code>list::sort()</code>；底层为 introsort（快排 + 堆排 + 插入排序）</td>
+</tr>
+<tr>
+<td>binary_search</td>
+<td>二分查找</td>
+<td>有序序列 + 随机访问 &#x2F; 双向迭代器</td>
+<td>仅返回是否存在；需获取元素迭代器用<code>lower_bound()</code></td>
+</tr>
+<tr>
+<td>find</td>
+<td>线性查找</td>
+<td>所有迭代器</td>
+<td>O (n) 效率；map&#x2F;set 优先用成员函数<code>find()</code>（O(logn)）</td>
+</tr>
+<tr>
+<td>for_each</td>
+<td>遍历执行操作</td>
+<td>所有迭代器</td>
+<td>可传递函数 &#x2F; 仿函数 &#x2F;lambda；返回函数对象（可携带遍历后的状态）</td>
+</tr>
+<tr>
+<td>remove</td>
+<td>逻辑删除</td>
+<td>所有迭代器</td>
+<td>需配合<code>erase()</code>物理删除；不改变容器 size</td>
+</tr>
+<tr>
+<td>unique</td>
+<td>去重</td>
+<td>有序序列 + 所有迭代器</td>
+<td>需先排序，配合<code>erase()</code>生效；支持自定义谓词（如<code>[](int a,int b){return abs(a-b)&lt;=2;}</code>）；list 有专属<code>unique()</code>，直接物理删除</td>
+</tr>
+<tr>
+<td>stable_sort</td>
+<td>稳定排序（保原始顺序）</td>
+<td>随机访问迭代器</td>
+<td>多字段排序场景适用；空间复杂度 O (n)，高于 sort 的 O (logn)</td>
+</tr>
+</tbody></table>
+<h3 id="2-仿函数与-lambda"><a href="#2-仿函数与-lambda" class="headerlink" title="2. 仿函数与 lambda"></a>2. 仿函数与 lambda</h3><ul>
+<li>仿函数：可复用、带状态；标准库提供<code>std::plus&lt;T&gt;</code>（加法）、<code>std::greater&lt;T&gt;</code>（大于）等基础仿函数。</li>
+<li>谓词要求：自定义比较谓词需满足<strong>严格弱序</strong>（非自反：<code>comp(x,x)=false</code>；反对称：<code>comp(x,y)=true</code>则<code>comp(y,x)=false</code>；传递性），违反会导致未定义行为（容器插入异常、算法崩溃）。</li>
+<li>函数适配器：<code>std::bind</code>（绑定函数参数），与 C++11+ lambda 为互补关系（日常优先 lambda ，绑定类成员函数、兼容旧代码等场景<code>std::bind</code>更适配）。</li>
+<li>优先级：容器成员函数 &gt; 全局算法（如<code>map.find()</code>比<code>std::find()</code>高效）。</li>
 </ul>
-</li>
-<li><strong>查找</strong>：<ul>
-<li><code>find(first, last, val)</code>：线性查找（<code>O(n)</code>），支持所有迭代器。</li>
-<li><code>binary_search(first, last, val)</code>：二分查找（<code>O(logn)</code>），需有序序列 + 随机访问 &#x2F; 双向迭代器。</li>
-</ul>
-</li>
-<li><strong>遍历</strong>：<code>for_each(first, last, func)</code>，对元素执行<code>func</code>（函数 &#x2F; 仿函数）。</li>
-<li><strong>删除</strong>：<code>remove(first, last, val)</code>（逻辑删除，移动元素），需配合<code>erase</code>真正删除：<code>container.erase(remove(...), container.end())</code>。</li>
-</ul>
-<h3 id="2-仿函数（函数对象）"><a href="#2-仿函数（函数对象）" class="headerlink" title="2. 仿函数（函数对象）"></a>2. 仿函数（函数对象）</h3><ul>
-<li>定义：重载<code>operator()</code>的类 &#x2F; 结构体，可携带状态，比函数指针灵活。</li>
-<li>用途：算法中传递自定义逻辑（如<code>sort</code>的比较规则、<code>find_if</code>的筛选条件）。</li>
-</ul>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://Devilsean.github.io">Sean</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://devilsean.github.io/posts/6e08d78f.html">https://devilsean.github.io/posts/6e08d78f.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://Devilsean.github.io" target="_blank">肖恩的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/%E5%9F%BA%E7%A1%80/">基础</a><a class="post-meta__tags" href="/tags/STL/">STL</a></div><div class="post-share"><div class="social-share" data-image="/./img/cover.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/33981620.html" title="异常基础与语法"><img class="cover" src="/./img/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">异常基础与语法</div></div><div class="info-2"><div class="info-item-1">核心要点速览 异常处理三关键字：throw（抛出异常）、try（监控异常代码）、catch（捕获处理异常），核心是分离错误检测与处理 基本流程：try监控→throw抛异常→catch匹配处理；无匹配则异常传播，最终未捕获则程序终止 匹配规则：catch按声明顺序匹配，子类异常需在父类前捕获，catch(...)（万能捕获）必须放最后 异常类型：推荐类类型（标准库异常或自定义类），可携带详细信息；避免基本类型（语义模糊）   一、三个关键字一、throw（抛出异常） 作用：检测到不可处理的错误（如参数非法）时，主动抛出异常对象，中断当前执行，通知上层处理。 语法：throw 表达式;（表达式结果为异常对象）。 关键细节： 异常类型选择： 不推荐基本类型（如throw 1，语义模糊，无法区分错误类型）； 推荐类类型（如标准库std::invalid_argument），可携带详细信息（如&quot;文件路径不能为空&quot;）。   执行逻辑：throw后，当前函数中后续代码立即终止，进入异常传播阶段（寻找匹配catch）。    二、try（监控异常） 作用：包裹可能抛出异常的...</div></div></div></a><a class="pagination-related" href="/posts/45737555.html" title="异常传播与栈展开"><img class="cover" src="/./img/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">异常传播与栈展开</div></div><div class="info-2"><div class="info-item-1">核心要点速览 异常传播：无匹配catch时，异常逐层向上传递至调用者，直至捕获或触发std::terminate() 栈展开：传播过程中自动逆序销毁局部对象（按构造逆序），保障资源回收 核心规则：析构函数禁止抛异常（避免双重异常），未完全构造对象不执行析构 异常安全：依赖栈展开原子性 + RAII 机制，避免资源泄漏   一、异常传播：从抛出点到捕获点的传递逻辑核心概念函数抛出异常且自身无匹配try-catch时，异常会沿函数调用栈逐层向上传播，依次遍历调用者上下文，直到被某个catch块捕获；若全程无捕获，程序调用std::terminate()终止（默认执行std::abort()）。 传播流程 函数调用链：A→B→C，C 中抛出异常； C 无catch匹配，异常传播至 B； B 无catch匹配，继续传播至 A； A 的try块监控到异常，匹配catch执行处理； 若 A 仍无匹配，异常传播至main函数，最终未捕获则程序终止。  关键细节 异常传播时，被跳过函数中 “已执行但未进入try块” 的代码不再执行； 传播仅终止当前线程执行流，不跨线程影响其他线程； std::t...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/b9f6280b.html" title="线程基础"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">线程基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 线程 vs 进程：进程是资源分配单位（独立内存），线程是调度单位（共享进程内存），线程通信成本更低 线程创建：std::thread支持函数、Lambda、函数对象三种方式 线程管理：join()等待回收、detach()分离（慎用）、joinable()检查状态 线程标识：std::this_thread::get_id()获取 ID，std::thread::id判断唯一性 线程状态：就绪、运行、阻塞、终止   一、线程的基本概念1. 线程与进程 进程：程序的一次执行实例，拥有独立内存空间（代码、数据、堆栈），是资源分配的最小单位。 线程：进程内的执行单元，共享进程的代码、全局数据等资源，拥有独立的栈和寄存器，是调度的最小单位。 核心区别： 资源隔离：进程间地址空间独立，线程间共享进程内存。 通信成本：进程间通信（IPC）需跨地址空间（成本高），线程间直接共享数据（成本低）。 轻量化：线程比进程更轻量，创建、切换、销毁开销更小。    2. 线程的优势 并发执行多个任务，提升程序响应速度。 充分利用多核 CPU 资源，提高 CPU 利用率。 比进程更轻量，资源消...</div></div></div></a><a class="pagination-related" href="/posts/5f08cd61.html" title="字符串基础"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">字符串基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 C 风格字符串：以&#39;\0&#39;结尾的字符数组，依赖cstring库函数，无安全检查（易溢出） C++ std::string：动态管理、安全便捷，支持 SSO（小字符串优化），提供丰富成员方法 拷贝关键：C 语言strcpy不安全、strncpy需补&#39;\0&#39;、strlcpy安全非标准；C++ 直接用拷贝构造 &#x2F; 赋值 &#x2F;assign   一、C 风格字符串（char[]）本质是以&#39;\0&#39;（空字符）为结束标记的字符数组，&#39;\0&#39;是字符串终止的核心标识。 1. 初始化（高频易错点）1234567// 正确写法char str1[] = &quot;hello&quot;;  // 自动添加&#x27;\0&#x27;，数组长度6（h e l l o \0）char str2[] = &#123;&#x27;h&#x27;,&#x27;i&#x27;,&#x27;\0&#x27;&#125;;  // 手动添加&#x27;\0&#x27;，长度3char str3[10] = &quot;hi...</div></div></div></a><a class="pagination-related" href="/posts/c24002d9.html" title="数组基础"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">数组基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 数组名：本质是首元素地址，仅 3 种场景不退化（sizeof、&amp; 数组名、decltype） 数组传参：一维退化为指针（丢失长度），二维必须指定第二维长度 C 风格字符串：以&#39;\0&#39;结尾的字符数组，strlen 与 sizeof 计算逻辑不同 数组 vs vector：数组编译期定长、手动管理内存；vector 动态扩容、自动管理   一、数组名与指针数组名的核心特性：通常等价于首元素地址，但以下 3 种场景不退化（保留数组类型特性）。 1. 数组名不退化的 3 种场景 sizeof(数组名)：计算整个数组的字节总大小（而非指针大小）。 &amp;数组名：获取指向 “整个数组” 的指针（类型为数组类型(*)[长度]，而非首元素指针）。 decltype(数组名)：推导为数组类型（如decltype(arr)为int[5]，而非int*）。  2. 易错点补充 区分&amp;数组名与&amp;数组首元素：   123int arr[5] = &#123;1,2,3,4,5&#125;;&amp;arr;    // 类型为int(*)[5]（指...</div></div></div></a><a class="pagination-related" href="/posts/6bd4602e.html" title="模板基础"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">模板基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 核心意义：将类型作为参数，实现通用逻辑，编译期生成具体类型代码 分类：函数模板（可隐式实例化）、类模板（需显式实例化） 模板参数：类型参数（typename T）、非类型参数（编译期常量） 特化：全特化（所有参数指定类型）、偏特化（仅类模板支持，部分参数指定类型） 关键区别：模板有类型检查，宏无；模板支持特化 &#x2F; 重载，宏不支持   一、模板的核心意义通过 “类型作为参数” 脱离具体类型约束，让通用逻辑适配多种类型，编译器自动生成对应版本代码（无重复编写成本，类型安全）。  二、函数模板核心定义生成具体函数的 “模板”，编译器根据实参类型自动实例化对应版本。 关键规则 语法：template&lt;模板参数列表&gt; 返回类型 函数名(参数列表) { ... } 实例化： 隐式实例化：编译器根据实参推导类型（如max(1,2)推导T=int）。 显式实例化：手动指定类型（如max&lt;int&gt;(1.5,2.5)强制T=int）。   重载：支持模板间重载（参数列表 &#x2F; 模板参数不同），非模板函数优先级高于模板函数。   三、类模板核心定...</div></div></div></a><a class="pagination-related" href="/posts/91149a63.html" title="网络基础"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">网络基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 协议栈：TCP&#x2F;IP 四层模型（应用层→传输层→网络层→数据链路层） TCP vs UDP：TCP 面向连接、可靠流式；UDP 无连接、高效数据报 三次握手：建立 TCP 连接，确保双方收发能力正常；四次挥手：断开连接，释放全双工通道 TIME_WAIT：客户端第四次挥手后停留 2MSL，确保 ACK 送达、旧报文失效 Socket：网络编程接口，由 “IP + 端口” 唯一标识，TCP 需按固定流程（绑定 - 监听 - 连接 - 收发）编程   一、TCP&#x2F;IP 四层模型 应用层：提供具体业务协议（HTTP、FTP、DNS），定义数据格式和交互逻辑 传输层：TCP&#x2F;UDP，负责端到端（进程间）数据传输（可靠 &#x2F; 高效） 网络层：IP 协议，负责跨网络路由转发（寻址） 数据链路层：处理物理介质上的帧传输（如以太网帧）   二、TCP 与 UDP 核心对比   对比维度 TCP（传输控制协议） UDP（用户数据报协议）    连接性 面向连接（三次握手建连，四次挥手断连） 无连接（直接发送，无需建连）   可靠性 可靠（重传、序...</div></div></div></a><a class="pagination-related" href="/posts/1111c3f5.html" title="函数基础"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">函数基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 声明与定义：可多次声明，仅能一次定义；原型需匹配参数类型 &#x2F; 个数（返回类型不影响） 参数传递：值传递（拷贝，不影响实参）、引用传递（别名，无拷贝）、指针传递（地址，支持 nullptr） 函数重载：同名 + 参数列表不同（类型 &#x2F; 个数 &#x2F; 顺序），返回类型不参与重载 内联函数：inline 修饰，建议编译器嵌入调用处（适合短函数，无循环 &#x2F; 递归） 默认参数：遵循 “靠右原则”，不可跳过右侧参数省略左侧 返回值：禁止返回局部变量引用；大型对象返回有 RVO&#x2F;NRVO 优化   一、函数的声明与定义核心概念 声明：告知编译器函数的 “存在及原型”（返回类型、函数名、参数类型 &#x2F; 个数），不包含实现；参数名可选（仅声明时）。 用途：解决 “调用在前、定义在后” 的编译错误，如int add(int, int);   定义：包含声明 + 函数体（具体实现），编译器会分配内存生成指令。  关键规则 单定义原则（ODR）：一个函数可在多个文件中声明，但仅能在一个文件中定义（否则链接报错 “重复定义”）。 原型匹配...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Sean</div><div class="author-info-description">像风走了八千里，不问归期</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">32</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">49</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Devilsean"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">载着零散思绪与滚烫热爱，与同频的你相遇。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E8%A6%81%E7%82%B9%E9%80%9F%E8%A7%88"><span class="toc-number">1.</span> <span class="toc-text">核心要点速览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81STL-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">一、STL 核心组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AE%B9%E5%99%A8%EF%BC%9A%E5%88%86%E7%B1%BB%E4%B8%8E%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="toc-number">3.</span> <span class="toc-text">二、容器：分类与核心特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%BA%8F%E5%88%97%E5%BC%8F%E5%AE%B9%E5%99%A8%EF%BC%88%E5%85%83%E7%B4%A0%E6%9C%89%E5%BA%8F%EF%BC%8C%E4%BE%9D%E8%B5%96%E4%BD%8D%E7%BD%AE%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">1. 序列式容器（元素有序，依赖位置）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#vector%EF%BC%9A%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84"><span class="toc-number">3.1.1.</span> <span class="toc-text">vector：动态数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#list%EF%BC%9A%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="toc-number">3.1.2.</span> <span class="toc-text">list：双向链表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#deque%EF%BC%9A%E5%8F%8C%E7%AB%AF%E9%98%9F%E5%88%97"><span class="toc-number">3.1.3.</span> <span class="toc-text">deque：双端队列</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%85%B3%E8%81%94%E5%BC%8F%E5%AE%B9%E5%99%A8%EF%BC%88%E5%85%83%E7%B4%A0%E6%97%A0%E5%BA%8F%EF%BC%8C%E4%BE%9D%E8%B5%96%E9%94%AE%E5%80%BC%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">2. 关联式容器（元素无序，依赖键值）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8%EF%BC%88%E7%BA%A2%E9%BB%91%E6%A0%91%E5%AE%9E%E7%8E%B0%EF%BC%8CO-logn-%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="toc-number">3.2.1.</span> <span class="toc-text">有序关联容器（红黑树实现，O(logn)操作）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A0%E5%BA%8F%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8%EF%BC%88%E5%93%88%E5%B8%8C%E8%A1%A8%E5%AE%9E%E7%8E%B0%EF%BC%8C%E5%B9%B3%E5%9D%87O-1-%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="toc-number">3.2.2.</span> <span class="toc-text">无序关联容器（哈希表实现，平均O(1)操作）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#map-vs-unordered-map"><span class="toc-number">3.2.3.</span> <span class="toc-text">map vs unordered_map</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%AE%B9%E5%99%A8%E9%80%82%E9%85%8D%E5%99%A8%EF%BC%88%E6%8E%A5%E5%8F%A3%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-number">3.3.</span> <span class="toc-text">3. 容器适配器（接口转换）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8%EF%BC%9A%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%A4%B1%E6%95%88"><span class="toc-number">4.</span> <span class="toc-text">三、迭代器：类型与失效</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%BF%AD%E4%BB%A3%E5%99%A8%E7%B1%BB%E5%9E%8B%EF%BC%88%E6%8C%89%E5%8A%9F%E8%83%BD%E5%88%92%E5%88%86%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">1. 迭代器类型（按功能划分）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%A4%B1%E6%95%88%E5%9C%BA%E6%99%AF"><span class="toc-number">4.2.</span> <span class="toc-text">2. 迭代器失效场景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#vector-%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%A4%B1%E6%95%88"><span class="toc-number">4.2.1.</span> <span class="toc-text">vector 迭代器失效</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#list-%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%A4%B1%E6%95%88"><span class="toc-number">4.2.2.</span> <span class="toc-text">list 迭代器失效</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#map-set-%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%A4%B1%E6%95%88"><span class="toc-number">4.2.3.</span> <span class="toc-text">map&#x2F;set 迭代器失效</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%AE%97%E6%B3%95%EF%BC%9A%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%E4%B8%8E%E9%80%82%E7%94%A8%E6%9D%A1%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">四、算法：常用算法与适用条件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A0%B8%E5%BF%83%E7%AE%97%E6%B3%95"><span class="toc-number">5.1.</span> <span class="toc-text">1. 核心算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BB%BF%E5%87%BD%E6%95%B0%EF%BC%88%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1%EF%BC%89"><span class="toc-number">5.2.</span> <span class="toc-text">2. 仿函数（函数对象）</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/5c7e22c2.html" title="滕王阁序"><img src="/../../img/post/tengwangge.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="滕王阁序"/></a><div class="content"><a class="title" href="/posts/5c7e22c2.html" title="滕王阁序">滕王阁序</a><time datetime="2025-11-01T03:30:00.000Z" title="发表于 2025-11-01 11:30:00">2025-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/43ae7cb1.html" title="程序结构与预处理"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="程序结构与预处理"/></a><div class="content"><a class="title" href="/posts/43ae7cb1.html" title="程序结构与预处理">程序结构与预处理</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/dc2fae3c.html" title="运算符与表达式"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="运算符与表达式"/></a><div class="content"><a class="title" href="/posts/dc2fae3c.html" title="运算符与表达式">运算符与表达式</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/895e9db.html" title="线程同步"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="线程同步"/></a><div class="content"><a class="title" href="/posts/895e9db.html" title="线程同步">线程同步</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/52c049c7.html" title="数据类型与变量"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据类型与变量"/></a><div class="content"><a class="title" href="/posts/52c049c7.html" title="数据类型与变量">数据类型与变量</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Sean</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button><button id="go-down" type="button" title="直达底部" onclick="btf.scrollToDest(document.body.scrollHeight, 500)"><i class="fas fa-arrow-down"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+<hr>
+<h2 id="五、容器选型决策树"><a href="#五、容器选型决策树" class="headerlink" title="五、容器选型决策树"></a>五、容器选型决策树</h2><ol>
+<li>需随机访问 → vector（优先）&#x2F;deque（需头操作）</li>
+<li>需频繁中间增删 → list</li>
+<li>需按键查找 → 有序（map&#x2F;set，范围查询 &#x2F; 有序遍历）&#x2F; 无序（unordered_*，纯查找高效）</li>
+<li>需 LIFO&#x2F;FIFO&#x2F; 优先级 → stack&#x2F;queue&#x2F;priority_queue</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://Devilsean.github.io">Sean</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://devilsean.github.io/posts/6e08d78f.html">https://devilsean.github.io/posts/6e08d78f.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://Devilsean.github.io" target="_blank">肖恩的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/STL/">STL</a><a class="post-meta__tags" href="/tags/%E5%9F%BA%E7%A1%80/">基础</a></div><div class="post-share"><div class="social-share" data-image="/./img/cover.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/6bd4602e.html" title="模板与STL：模板基础"><img class="cover" src="/./img/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">模板与STL：模板基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 意义：将类型作为参数，实现通用逻辑，编译期生成具体类型代码 分类：函数模板（可隐式实例化）、类模板（需显式实例化） 模板参数：类型参数（typename T）、非类型参数（编译期常量） 特化：全特化（所有参数指定类型）、偏特化（仅类模板支持，部分参数指定类型） 区别：模板有类型检查，宏无；模板支持特化 &#x2F; 重载，宏不支持   一、模板的意义通过 “类型参数化” 让通用逻辑适配多种类型，既避免为不同类型重复编写相似代码（提升复用），又能在编译期进行类型检查（保证安全），且编译器会生成具体类型的代码（无运行时开销）。这也是 STL 容器（如 vector）和算法（如 sort）的实现基础。  二、函数模板定义生成具体函数的 “模板”，编译器根据实参类型自动实例化对应版本。 规则 语法：template&lt;模板参数列表&gt; 返回类型 函数名(参数列表) { ... } 实例化： 隐式实例化：编译器根据实参推导类型（如max(1,2)推导T=int）。 显式实例化：手动指定类型（如max&lt;int&gt;(1.5,2.5)强制T=int）。   重载：...</div></div></div></a><a class="pagination-related" href="/posts/45737555.html" title="异常处理：异常传播与栈展开"><img class="cover" src="/./img/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">异常处理：异常传播与栈展开</div></div><div class="info-2"><div class="info-item-1">核心要点速览 异常传播：无匹配catch时，异常逐层向上传递至调用者，直至捕获或触发std::terminate() 栈展开：传播过程中自动逆序销毁局部对象（按构造逆序），保障资源回收 规则：析构函数禁止抛异常（避免双重异常），未完全构造对象不执行析构 异常安全：依赖栈展开原子性 + RAII 机制，避免资源泄漏 补充：异常匹配优先精确 &#x2F; 继承兼容，捕获const引用可避免异常切片   一、异常传播：从抛出点到捕获点的传递逻辑概念函数抛出异常且自身无匹配try-catch时，异常会沿函数调用栈逐层向上传播，依次遍历调用者上下文，直到被某个catch块捕获；若全程无捕获，程序调用std::terminate()终止（默认执行std::abort()）。 传播流程 函数调用链：A→B→C，C 中抛出异常； C 无catch匹配，异常传播至 B； B 无catch匹配，继续传播至 A； A 的try块监控到异常，匹配catch执行处理； 若 A 仍无匹配，异常传播至main函数，最终未捕获则程序终止。  细节 异常传播时，被跳过函数中 “已执行但未进入try块” 的代码不再...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/6bd4602e.html" title="模板与STL：模板基础"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">模板与STL：模板基础</div></div><div class="info-2"><div class="info-item-1">核心要点速览 意义：将类型作为参数，实现通用逻辑，编译期生成具体类型代码 分类：函数模板（可隐式实例化）、类模板（需显式实例化） 模板参数：类型参数（typename T）、非类型参数（编译期常量） 特化：全特化（所有参数指定类型）、偏特化（仅类模板支持，部分参数指定类型） 区别：模板有类型检查，宏无；模板支持特化 &#x2F; 重载，宏不支持   一、模板的意义通过 “类型参数化” 让通用逻辑适配多种类型，既避免为不同类型重复编写相似代码（提升复用），又能在编译期进行类型检查（保证安全），且编译器会生成具体类型的代码（无运行时开销）。这也是 STL 容器（如 vector）和算法（如 sort）的实现基础。  二、函数模板定义生成具体函数的 “模板”，编译器根据实参类型自动实例化对应版本。 规则 语法：template&lt;模板参数列表&gt; 返回类型 函数名(参数列表) { ... } 实例化： 隐式实例化：编译器根据实参推导类型（如max(1,2)推导T=int）。 显式实例化：手动指定类型（如max&lt;int&gt;(1.5,2.5)强制T=int）。   重载：...</div></div></div></a><a class="pagination-related" href="/posts/52c049c7.html" title="基础与语法与数据结构：数据类型与变量"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">基础与语法与数据结构：数据类型与变量</div></div><div class="info-2"><div class="info-item-1">核心要点速览 数据类型分类：基本类型、复合（派生）类型、自定义类型 核心复合类型：指针、引用、数组、结构体、联合体、枚举 变量关键特性：存储类别（auto&#x2F;static&#x2F;extern 等）、初始化要求、作用域与生命周期 常量核心：const（只读）、constexpr（编译期常量） 类型转换：隐式转换（编译器自动）、显式转换（四种强制转换）   一、数据类型1.1 基本类型基本类型是 C++ 内置的基础数据类型，具有固定内存大小（部分受平台影响）和明确取值范围。    类型 典型大小（32&#x2F;64 位系统） 含义 &#x2F; 范围 面试考点    bool 1 字节 布尔值：true（1）&#x2F;false（0） sizeof(bool)恒为 1；不可用 0 &#x2F; 非 0 代替（语法允许但不规范）   char 1 字节 ASCII 码：-128127 或 0255 区分signed char（带符号）和unsigned char（无符号）；默认符号性由编译器决定   short 2 字节 短整数：-32768~32767 与short ...</div></div></div></a><a class="pagination-related" href="/posts/43ae7cb1.html" title="基础与语法与数据结构：程序结构与预处理"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">基础与语法与数据结构：程序结构与预处理</div></div><div class="info-2"><div class="info-item-1">核心要点速览 流程：预处理→编译→汇编→链接→执行 程序入口：main 函数（返回值 int，return 0 表示正常退出） 核心预处理指令：#include（头文件包含）、#define（宏定义）、条件编译（#ifdef&#x2F;#ifndef&#x2F;endif）、#pragma once（头文件防重复包含）   核心要点速览 流程：预处理→编译→汇编→链接→执行 程序入口：main 函数（返回值 int，return 0 表示正常退出） 核心预处理指令：#include（头文件包含）、#define（宏定义）、条件编译（#ifdef&#x2F;#ifndef&#x2F;endif）、#pragma once（头文件防重复包含）   一、程序结构 执行流程：预处理→编译→汇编→链接→执行 预处理是编译的第一个阶段，由预处理器处理所有以 #开头的指令，生成 “预处理后的源代码” 预处理核心操作：消除注释、展开宏、处理条件编译、引入头文件内容     阶段 核心操作 产出物 关键工具    预处理 处理 # 指令、展开宏、引入头文件 预处理后的源代码 预处理器（cpp）  ...</div></div></div></a><a class="pagination-related" href="/posts/dc2fae3c.html" title="基础与语法与数据结构：运算符与表达式"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">基础与语法与数据结构：运算符与表达式</div></div><div class="info-2"><div class="info-item-1">核心要点速览 逻辑运算符（&amp;&amp;&#x2F;||）：支持短路求值，右操作数可能不执行 逗号运算符（,）：按左到右执行多个表达式，返回最后一个值，优先级最低 右结合运算符：赋值运算符（&#x3D;）、条件运算符（?:）、单目运算符，优先级相同时从右到左执行   一、逻辑运算符的短路求值（&amp;&amp; &#x2F; ||）核心规则短路求值是逻辑运算符的优化特性，仅在必要时计算右操作数，直接影响代码执行结果。  &amp;&amp;（逻辑与）：左操作数为false时，直接返回false，右操作数不执行。 ||（逻辑或）：左操作数为true时，直接返回true，右操作数不执行。  常见场景（含副作用表达式） &amp;&amp;短路示例：   123int i = 0;bool res = (i == 1) &amp;&amp; (++i); // 左为false，右++i不执行// 结果：res=false，i=0（而非1）  ||短路示例：   123int j = 0;bool res = (j == 0) || (++j); // 左为true，右++j不执...</div></div></div></a><a class="pagination-related" href="/posts/895e9db.html" title="并发编程：线程同步"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">并发编程：线程同步</div></div><div class="info-2"><div class="info-item-1">核心要点速览 数据竞争：多线程并发读写共享资源（至少一个写操作）的未定义行为 互斥锁：std::mutex（基础）、lock_guard（RAII 推荐）、unique_lock（灵活，配条件变量） 条件变量：wait()（阻塞 + 释锁）、notify_one()&#x2F;notify_all()，需配互斥锁 + 谓词（解虚假唤醒） 原子操作：std::atomic（硬件级原子性，无锁），核心内存序（relaxed&#x2F;acquire&#x2F;release&#x2F;seq_cst） 读写锁：std::shared_mutex（读共享、写独占），优化读多写少场景 常见问题：死锁（固定加锁顺序避免）、虚假唤醒（谓词检查解决）、活锁 &#x2F; 饥饿（延迟 &#x2F; 公平锁缓解）   一、线程同步的目标 保证数据一致性：避免多线程读写共享资源导致的结果不可预测。 控制执行顺序：确保线程按业务逻辑要求的顺序执行（如生产者先生产，消费者后消费）。   二、核心同步机制1. 互斥锁：独占式临界区访问 核心原理：通过 “加锁 - 操作 - 解锁”，保证同一时间仅一个线程进...</div></div></div></a><a class="pagination-related" href="/posts/b9f6280b.html" title="并发编程：线程"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">并发编程：线程</div></div><div class="info-2"><div class="info-item-1">核心要点速览 线程 vs 进程：进程是资源分配单位（独立内存），线程是调度单位（共享进程内存），线程通信成本更低 线程创建：std::thread支持函数、Lambda、函数对象三种方式 线程管理：join()等待回收、detach()分离（慎用）、joinable()检查状态 线程标识：std::this_thread::get_id()获取 ID，std::thread::id判断唯一性 线程状态：就绪、运行、阻塞、终止   一、线程的基本概念1. 线程与进程 进程：程序的一次执行实例，拥有独立内存空间（代码、数据、堆栈），是资源分配的最小单位。 线程：进程内的执行单元，共享进程的代码、全局数据等资源，拥有独立的栈和寄存器，是调度的最小单位。 核心区别： 资源隔离：进程间地址空间独立，线程间共享进程内存。 通信成本：进程间通信（IPC）需跨地址空间（成本高），线程间直接共享数据（成本低）。 轻量化：线程比进程更轻量，创建、切换、销毁开销更小。    2. 线程的优势 并发执行多个任务，提升程序响应速度。 充分利用多核 CPU 资源，提高 CPU 利用率。 比进程更轻量，资源消...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Sean</div><div class="author-info-description">像风走了八千里，不问归期</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">32</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">49</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Devilsean"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">载着零散思绪与滚烫热爱，与同频的你相遇。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E8%A6%81%E7%82%B9%E9%80%9F%E8%A7%88"><span class="toc-number">1.</span> <span class="toc-text">核心要点速览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81STL-%E7%BB%84%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">一、STL 组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%AE%B9%E5%99%A8%EF%BC%9A%E5%88%86%E7%B1%BB%E3%80%81%E7%89%B9%E6%80%A7%E4%B8%8E%E9%80%89%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">二、容器：分类、特性与选型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%BA%8F%E5%88%97%E5%BC%8F%E5%AE%B9%E5%99%A8%EF%BC%88%E5%85%83%E7%B4%A0%E6%9C%89%E5%BA%8F%EF%BC%8C%E4%BE%9D%E8%B5%96%E4%BD%8D%E7%BD%AE%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">1. 序列式容器（元素有序，依赖位置）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%85%B3%E8%81%94%E5%BC%8F%E5%AE%B9%E5%99%A8%EF%BC%88%E5%85%83%E7%B4%A0%E6%97%A0%E5%BA%8F%EF%BC%8C%E4%BE%9D%E8%B5%96%E9%94%AE%E5%80%BC%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">2. 关联式容器（元素无序，依赖键值）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8%EF%BC%88%E7%BA%A2%E9%BB%91%E6%A0%91%EF%BC%8CO-logn-%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="toc-number">3.2.1.</span> <span class="toc-text">有序关联容器（红黑树，O (logn) 操作）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A0%E5%BA%8F%E5%85%B3%E8%81%94%E5%AE%B9%E5%99%A8%EF%BC%88%E5%93%88%E5%B8%8C%E8%A1%A8%EF%BC%8C%E5%B9%B3%E5%9D%87-O-1-%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="toc-number">3.2.2.</span> <span class="toc-text">无序关联容器（哈希表，平均 O (1) 操作）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#map-vs-unordered-map-%E5%AF%B9%E6%AF%94"><span class="toc-number">3.2.3.</span> <span class="toc-text">map vs unordered_map 对比</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%AE%B9%E5%99%A8%E9%80%82%E9%85%8D%E5%99%A8%EF%BC%88%E6%8E%A5%E5%8F%A3%E8%BD%AC%E6%8D%A2%EF%BC%89"><span class="toc-number">3.3.</span> <span class="toc-text">3. 容器适配器（接口转换）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%BF%AD%E4%BB%A3%E5%99%A8%EF%BC%9A%E7%B1%BB%E5%9E%8B%E4%B8%8E%E5%A4%B1%E6%95%88"><span class="toc-number">4.</span> <span class="toc-text">三、迭代器：类型与失效</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%BF%AD%E4%BB%A3%E5%99%A8%E7%B1%BB%E5%9E%8B%EF%BC%88%E6%8C%89%E5%8A%9F%E8%83%BD%E5%88%92%E5%88%86%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">1. 迭代器类型（按功能划分）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%A4%B1%E6%95%88%E5%9C%BA%E6%99%AF"><span class="toc-number">4.2.</span> <span class="toc-text">2. 失效场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%BF%AD%E4%BB%A3%E5%99%A8%E7%89%B9%E6%80%A7"><span class="toc-number">4.3.</span> <span class="toc-text">3. 迭代器特性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E7%AE%97%E6%B3%95%E4%B8%8E%E4%BB%BF%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text">四、算法与仿函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95"><span class="toc-number">5.1.</span> <span class="toc-text">1. 常用算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BB%BF%E5%87%BD%E6%95%B0%E4%B8%8E-lambda"><span class="toc-number">5.2.</span> <span class="toc-text">2. 仿函数与 lambda</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E5%AE%B9%E5%99%A8%E9%80%89%E5%9E%8B%E5%86%B3%E7%AD%96%E6%A0%91"><span class="toc-number">6.</span> <span class="toc-text">五、容器选型决策树</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/5c7e22c2.html" title="滕王阁序"><img src="/../../img/post/tengwangge.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="滕王阁序"/></a><div class="content"><a class="title" href="/posts/5c7e22c2.html" title="滕王阁序">滕王阁序</a><time datetime="2025-11-01T03:30:00.000Z" title="发表于 2025-11-01 11:30:00">2025-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/52c049c7.html" title="基础与语法与数据结构：数据类型与变量"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基础与语法与数据结构：数据类型与变量"/></a><div class="content"><a class="title" href="/posts/52c049c7.html" title="基础与语法与数据结构：数据类型与变量">基础与语法与数据结构：数据类型与变量</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/43ae7cb1.html" title="基础与语法与数据结构：程序结构与预处理"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基础与语法与数据结构：程序结构与预处理"/></a><div class="content"><a class="title" href="/posts/43ae7cb1.html" title="基础与语法与数据结构：程序结构与预处理">基础与语法与数据结构：程序结构与预处理</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/dc2fae3c.html" title="基础与语法与数据结构：运算符与表达式"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="基础与语法与数据结构：运算符与表达式"/></a><div class="content"><a class="title" href="/posts/dc2fae3c.html" title="基础与语法与数据结构：运算符与表达式">基础与语法与数据结构：运算符与表达式</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/895e9db.html" title="并发编程：线程同步"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="并发编程：线程同步"/></a><div class="content"><a class="title" href="/posts/895e9db.html" title="并发编程：线程同步">并发编程：线程同步</a><time datetime="2025-10-29T07:30:00.000Z" title="发表于 2025-10-29 15:30:00">2025-10-29</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Sean</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button><button id="go-down" type="button" title="直达底部" onclick="btf.scrollToDest(document.body.scrollHeight, 500)"><i class="fas fa-arrow-down"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
   const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
   const option = null
 
@@ -389,7 +456,42 @@
   } else {
     window.loadOtherComment = loadTwikoo
   }
-})()</script></div><canvas id="snow"></canvas><script async src="/js/snow.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+})()</script></div><canvas id="snow"></canvas><script async src="/js/snow.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function history_calendar_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-history"> <!-- 挂载容器 --> <div class="card-content"> <div class="item-headline"> <i class="fas fa-clock fa-spin"></i> <span>那年今日</span> </div> <div id="history-baidu" style="height: 100px;overflow: hidden"> <!-- 挂载器 --> <div class="history_swiper-container" id="history-container" style="width: 100%;height: 100%"> <div class="swiper-wrapper" id="history_container_wrapper" style="height:20px"></div> </div> </div> </div>';
+                console.log('已挂载history_calendar')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            history_calendar_injector_config()
+        } </script><script data-pjax  src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script><script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-card-history/baiduhistory/js/main.js"></script><script data-pjax>
+    function butterfly_categories_card_injector_config(){
+      var parent_div_git = document.getElementById('recent-posts');
+      var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 380px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 320px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"><li class="categoryBar-list-item" style="background:url(./img/poem.png);"> <a class="categoryBar-list-link" href="categories/诗词歌赋/">诗词歌赋</a><span class="categoryBar-list-count">2</span><span class="categoryBar-list-descr">有格调</span></li><li class="categoryBar-list-item" style="background:url(./img/fwC++.png);"> <a class="categoryBar-list-link" href="categories/C/">C++</a><span class="categoryBar-list-count">30</span><span class="categoryBar-list-descr">有生活</span></li></ul></div></div>';
+      console.log('已挂载butterfly_categories_card')
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+      }
+    if( document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    butterfly_categories_card_injector_config()
+    }
+  </script><div class="js-pjax"><script async="async">var arr = document.getElementsByClassName('recent-post-item');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '1s');
+    arr[i].setAttribute('data-wow-delay', '0s');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script><script async="async">var arr = document.getElementsByClassName('card-widget');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '');
+    arr[i].setAttribute('data-wow-delay', '');
+    arr[i].setAttribute('data-wow-offset', '');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script></div><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow.min.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow_init.js"></script><script data-pjax>
   function butterfly_swiper_injector_config(){
     var parent_div_git = document.getElementById('recent-posts');
     var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/5c7e22c2.html" alt=""><img width="48" height="48" src="../../img/post/tengwangge.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-01</span><a class="blog-slider__title" href="posts/5c7e22c2.html" alt="">滕王阁序</a><div class="blog-slider__text">难得糊涂</div><a class="blog-slider__button" href="posts/5c7e22c2.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/9a70fb8f.html" alt=""><img width="48" height="48" src="../../img/post/gongbaitou.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-29</span><a class="blog-slider__title" href="posts/9a70fb8f.html" alt="">共白头</a><div class="blog-slider__text">难得糊涂</div><a class="blog-slider__button" href="posts/9a70fb8f.html" alt="">详情   </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
@@ -413,20 +515,4 @@
   else if (epage === cpage){
     butterfly_swiper_injector_config();
   }
-  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><div class="js-pjax"><script async="async">var arr = document.getElementsByClassName('recent-post-item');
-for(var i = 0;i<arr.length;i++){
-    arr[i].classList.add('wow');
-    arr[i].classList.add('animate__zoomIn');
-    arr[i].setAttribute('data-wow-duration', '1s');
-    arr[i].setAttribute('data-wow-delay', '0s');
-    arr[i].setAttribute('data-wow-offset', '100');
-    arr[i].setAttribute('data-wow-iteration', '1');
-  }</script><script async="async">var arr = document.getElementsByClassName('card-widget');
-for(var i = 0;i<arr.length;i++){
-    arr[i].classList.add('wow');
-    arr[i].classList.add('animate__zoomIn');
-    arr[i].setAttribute('data-wow-duration', '');
-    arr[i].setAttribute('data-wow-delay', '');
-    arr[i].setAttribute('data-wow-offset', '');
-    arr[i].setAttribute('data-wow-iteration', '');
-  }</script></div><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow.min.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow_init.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/miku.model.json"},"display":{"position":"left","width":200,"height":350,"hOffset":-15,"vOffset":18},"mobile":{"show":true},"react":{"opacity":0.8},"log":false});</script></body></html>
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/miku.model.json"},"display":{"position":"left","width":200,"height":350,"hOffset":-15,"vOffset":18},"mobile":{"show":true},"react":{"opacity":0.8},"log":false});</script></body></html>
