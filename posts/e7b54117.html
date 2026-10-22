@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Item33：对于auto&amp;&amp;形参使用decltype以及forward它们 | 肖恩的博客</title><meta name="author" content="Sean"><meta name="copyright" content="Sean"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="泛型 lambda 的本质与初始问题C++14 的泛型 lambda 允许在形参中使用auto，它的底层实现是：lambda 对应的闭包类中，operator()会被编译成一个模板函数。比如： 1auto f &#x3D; [](auto x) &#123; return func(normalize(x)); &#125;;  等价于闭包类里的模板成员函数： 1234567class CompilerGe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Item33：对于auto&amp;&amp;形参使用decltype以及forward它们">
+<meta property="og:url" content="https://devilsean.github.io/posts/e7b54117.html">
+<meta property="og:site_name" content="肖恩的博客">
+<meta property="og:description" content="泛型 lambda 的本质与初始问题C++14 的泛型 lambda 允许在形参中使用auto，它的底层实现是：lambda 对应的闭包类中，operator()会被编译成一个模板函数。比如： 1auto f &#x3D; [](auto x) &#123; return func(normalize(x)); &#125;;  等价于闭包类里的模板成员函数： 1234567class CompilerGe">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://devilsean.github.io/img/cover.jpg">
+<meta property="article:published_time" content="2026-03-15T12:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-22T01:47:25.112Z">
+<meta property="article:author" content="Sean">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="decltype">
+<meta property="article:tag" content="forward">
+<meta property="article:tag" content="lambda">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://devilsean.github.io/img/cover.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Item33：对于auto&&形参使用decltype以及forward它们",
+  "url": "https://devilsean.github.io/posts/e7b54117.html",
+  "image": "https://devilsean.github.io/img/cover.jpg",
+  "datePublished": "2026-03-15T12:00:00.000Z",
+  "dateModified": "2026-10-22T01:47:25.112Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Sean",
+      "url": "https://Devilsean.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://devilsean.github.io/posts/e7b54117.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Item33：对于auto&&形参使用decltype以及forward它们',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-card-history/baiduhistory/css/main.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-categories-card@1.0.0/lib/categorybar.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/animate.min.css" media="print" onload="this.media='screen'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">74</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">88</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-info-circle"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/./img/cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">肖恩的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">Item33：对于auto&amp;&amp;形参使用decltype以及forward它们</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-info-circle"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Item33：对于auto&amp;&amp;形参使用decltype以及forward它们</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-22T01:47:25.112Z" title="更新于 2026-10-22 09:47:25">2026-10-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Effective-Modern-C/">Effective Modern C++</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="泛型-lambda-的本质与初始问题"><a href="#泛型-lambda-的本质与初始问题" class="headerlink" title="泛型 lambda 的本质与初始问题"></a>泛型 lambda 的本质与初始问题</h2><p>C++14 的泛型 lambda 允许在形参中使用<code>auto</code>，它的底层实现是：lambda 对应的闭包类中，<code>operator()</code>会被编译成一个模板函数。比如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> f = [](<span class="keyword">auto</span> x) &#123; <span class="keyword">return</span> <span class="built_in">func</span>(<span class="built_in">normalize</span>(x)); &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>等价于闭包类里的模板成员函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CompilerGeneratedClass</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function">    <span class="keyword">auto</span> <span class="title">operator</span><span class="params">()</span><span class="params">(T x)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">func</span>(<span class="built_in">normalize</span>(x));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这里的问题是：<strong>即使你给 lambda 传入的是右值（比如临时对象），形参<code>x</code>本身是左值</strong>，导致<code>normalize</code>永远接收到左值，无法区分实参的原始值类别（左值 &#x2F; 右值），失去了 “转发” 的意义。</p>
+<h2 id="完美转发的初步尝试与障碍"><a href="#完美转发的初步尝试与障碍" class="headerlink" title="完美转发的初步尝试与障碍"></a>完美转发的初步尝试与障碍</h2><p>要实现 “完美转发”（保持实参的左值 &#x2F; 右值属性），常规思路是两步：</p>
+<ul>
+<li>把形参改成<strong>通用引用</strong>（<code>auto&amp;&amp;</code>），这是完美转发的基础；</li>
+<li>用<code>std::forward</code>转发参数。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> f = [](<span class="keyword">auto</span>&amp;&amp; x)</span><br><span class="line">         &#123; <span class="keyword">return</span> <span class="built_in">func</span>(<span class="built_in">normalize</span>(std::forward&lt;???&gt;(x))); &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>但这里遇到了关键障碍：<code>std::forward</code>需要指定类型参数（比如<code>std::forward&lt;T&gt;</code>），但泛型 lambda 内部无法直接访问闭包类<code>operator()</code>的模板参数<code>T</code>，所以不知道该给<code>std::forward</code>传什么类型（也就是<code>???</code>）。</p>
+<h2 id="解决障碍：decltype-std-forward-的组合逻辑"><a href="#解决障碍：decltype-std-forward-的组合逻辑" class="headerlink" title="解决障碍：decltype + std::forward 的组合逻辑"></a>解决障碍：decltype + std::forward 的组合逻辑</h2><h4 id="原理-1：decltype-对通用引用的类型推导规则"><a href="#原理-1：decltype-对通用引用的类型推导规则" class="headerlink" title="原理 1：decltype 对通用引用的类型推导规则"></a>原理 1：decltype 对通用引用的类型推导规则</h4><p>当你用<code>auto&amp;&amp; param</code>作为 lambda 形参时：</p>
+<ul>
+<li>如果传入<strong>左值</strong>，<code>decltype(param)</code>会推导出<strong>左值引用</strong>（比如<code>int&amp;</code>）；</li>
+<li>如果传入<strong>右值</strong>，<code>decltype(param)</code>会推导出<strong>右值引用</strong>（比如<code>int&amp;&amp;</code>）。</li>
+</ul>
+<h4 id="原理-2：std-forward-对右值引用类型参数的兼容"><a href="#原理-2：std-forward-对右值引用类型参数的兼容" class="headerlink" title="原理 2：std::forward 对右值引用类型参数的兼容"></a>原理 2：std::forward 对右值引用类型参数的兼容</h4><p><code>std::forward</code>的常规用法是：左值传<code>T&amp;</code>，右值传<code>T</code>（非引用）。但文章通过拆解<code>std::forward</code>的 C++14 实现和<strong>引用折叠规则</strong>，证明了一个关键结论：</p>
+<blockquote>
+<p>即使给<code>std::forward</code>传右值引用类型（比如<code>int&amp;&amp;</code>），经过引用折叠后，实例化出的函数和传非引用类型（<code>int</code>）的效果完全一致。</p>
+</blockquote>
+<p>这意味着：无论传入的是左值还是右值，<code>decltype(param)</code>的结果都能直接传给<code>std::forward</code>，完美匹配转发需求。</p>
+<h2 id="最终解决方案"><a href="#最终解决方案" class="headerlink" title="最终解决方案"></a>最终解决方案</h2><h4 id="单参数完美转发"><a href="#单参数完美转发" class="headerlink" title="单参数完美转发"></a>单参数完美转发</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> f = [](<span class="keyword">auto</span>&amp;&amp; param) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">func</span>(<span class="built_in">normalize</span>(std::forward&lt;<span class="keyword">decltype</span>(param)&gt;(param)));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="多参数完美转发（可变参数）"><a href="#多参数完美转发（可变参数）" class="headerlink" title="多参数完美转发（可变参数）"></a>多参数完美转发（可变参数）</h4><p>C++14 支持 lambda 的可变参数，配合折叠表达式可实现多参数完美转发：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> f = [](<span class="keyword">auto</span>&amp;&amp;... params) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">func</span>(<span class="built_in">normalize</span>(std::forward&lt;<span class="keyword">decltype</span>(params)&gt;(params)...));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>C++14 泛型 lambda 的<code>auto</code>形参本质是闭包类模板化的<code>operator()</code>，直接用<code>auto x</code>会丢失实参的左值 &#x2F; 右值属性；</li>
+<li>泛型 lambda 中实现完美转发：用<code>auto&amp;&amp;</code>定义通用引用形参，再通过<code>decltype(形参)</code>作为<code>std::forward</code>的类型参数；</li>
+<li>即使<code>decltype</code>对右值推导出右值引用类型，传给<code>std::forward</code>后经引用折叠，效果和常规用法完全一致，因此该方案通用且正确。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://Devilsean.github.io">Sean</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://devilsean.github.io/posts/e7b54117.html">https://devilsean.github.io/posts/e7b54117.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://Devilsean.github.io" target="_blank">肖恩的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/decltype/">decltype</a><a class="post-meta__tags" href="/tags/forward/">forward</a><a class="post-meta__tags" href="/tags/lambda/">lambda</a></div><div class="post-share"><div class="social-share" data-image="/./img/cover.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/f95ae6f2.html" title="Item35：优先考虑基于任务的编程而非基于线程的编程"><img class="cover" src="/./img/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Item35：优先考虑基于任务的编程而非基于线程的编程</div></div><div class="info-2"><div class="info-item-1">两种异步执行方式的直观对比基于线程（thread-based）：直接创建 std::thread12int doAsyncWork();std::thread t(doAsyncWork); // 直接创建线程执行函数   无直接获取返回值的方式； 若函数抛出异常，程序会直接调用std::terminate终止。  基于任务（task-based）：使用 std::async1auto fut = std::async(doAsyncWork); // 提交任务，返回future对象   代码更简洁； future的get()函数可获取返回值，还能捕获函数抛出的异常（避免程序终止）； 线程管理的责任交给标准库，而非开发者。  理解线程的三层含义   线程类型 定义    硬件线程 CPU 核心提供的真实执行单元，是计算的物理载体。   软件线程（OS 线程） 操作系统管理的线程，运行在硬件线程上，数量可多于硬件线程（阻塞时 OS 调度其他线程）。   std::thread C++ 中 “软件线程” 的句柄，可能为空（默认构造、移动、join、detach 后无对应软件线程）。 ...</div></div></div></a><a class="pagination-related" href="/posts/39678e80.html" title="Item36：如果有异步的必要请指定std::launch::async"><img class="cover" src="/./img/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Item36：如果有异步的必要请指定std::launch::async</div></div><div class="info-2"><div class="info-item-1">std::async 默认启动策略的本质与问题std::async的默认启动策略并非单一的异步执行（std::launch::async），而是std::launch::async | std::launch::deferred（异步 + 延迟执行的组合）。其底层逻辑是：系统自主决定任务是异步在新线程执行，还是延迟到调用future的get()&#x2F;wait()时同步执行。 这一设计的初衷是让标准库灵活管理线程资源（避免资源超额 &#x2F; 线程耗尽），但核心问题是：默认策略完全失去了对任务执行方式的可控性，引发一系列不确定性。 默认策略引发的执行不确定性坑 1：执行方式不可控 无法预测任务是否与调用std::async的线程并发执行； 无法预测任务是否在调用get()&#x2F;wait()的线程（而非新线程）上执行。  坑 2：线程本地存储（TLS）访问混乱若任务读写thread_local变量，无法确定访问的是 “新线程的 TLS” 还是 “调用get()&#x2F;wait()线程的 TLS”。 坑 3：任务可能永不执行若程序所有路径都未调用future的get(...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/b10f45c0.html" title="Item3：理解 decltype 类型推导"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-15</div><div class="info-item-2">Item3：理解 decltype 类型推导</div></div><div class="info-2"><div class="info-item-1">个人认为原著写的非常晦涩难懂，所以精简如下： decltype用于告知名字或表达式的类型： 1234567891011121314151617181920212223const int i = 0;               // decltype(i) 是 const intbool f(const Widget&amp; w);       // decltype(w) 是 const Widget&amp;；decltype(f) 是 bool(const Widget&amp;)struct Point &#123;  int x, y;&#125;;                             // decltype(Point::x) 是 int；decltype(Point::y) 是 intWidget w;                      // decltype(w) 是 Widgetif (f(w)) ...                  // decltype(f(w)) 是 booltemplate&lt;typename T&...</div></div></div></a><a class="pagination-related" href="/posts/ad06c595.html" title="Item23：理解move和forward"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-15</div><div class="info-item-2">Item23：理解move和forward</div></div><div class="info-2"><div class="info-item-1">两者的本质是编译期类型转换，运行时无任何操作 std::move不移动任何数据，std::forward不转发任何数据； 它们都是函数模板，仅在编译期对参数做值类别转换（左值→右值，或条件性转换），运行时不生成任何可执行代码（一字节都没有）； 两者的核心作用都是改变参数的值类别（左值 &#x2F; 右值），而非操作数据本身。  std::move：无条件将参数转为右值（但不保证能移动）1. 本质拆解接收一个通用引用参数，通过static_cast无条件转换为非引用类型的右值引用（用std::remove_reference确保不会因为 T 是左值引用而变成左值），最终返回一个右值。 简单说：std::move(x)的唯一作用是把x标记为右值，告诉编译器 “这个对象可以被移动”—— 但这只是 “提议”，不是 “强制”。 2. const 对象用 std::move 会 “伪移动”（实际是拷贝）123456789// 错误示范：给想移动的对象加了constclass Annotation &#123;public:    explicit Annotation(const std::...</div></div></div></a><a class="pagination-related" href="/posts/470b784c.html" title="Item31：避免使用默认捕获模式"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-15</div><div class="info-item-2">Item31：避免使用默认捕获模式</div></div><div class="info-2"><div class="info-item-1"> lambda 表达式：代码中的匿名函数片段（比如std::find_if中[](int val){ return 0&lt;val &amp;&amp; val&lt;10; }这行），是编译期的代码片段； 闭包：lambda 在运行时创建的对象，持有捕获数据的副本 &#x2F; 引用（比如传给find_if的第三个实参就是闭包）； 闭包类：编译器为每个 lambda 自动生成的唯一类，闭包是该类的实例，lambda 的逻辑会变成闭包类成员函数的执行代码。  避免使用 lambda 的默认捕获模式C++11 有两种默认捕获模式：[&amp;]（按引用捕获）、[=]（按值捕获） 1. 默认按引用捕获（[&amp;]）：悬空引用风险 原理：按引用捕获会让闭包持有 “lambda 定义作用域内的局部变量 &#x2F; 形参” 的引用；如果闭包的生命周期超过这些变量（比如闭包被存入容器，变量随函数返回销毁），引用就会变成悬空引用，后续使用闭包会触发未定义行为。 典型例子：  123456void addDivisorFilter() &#123;    int divisor = co...</div></div></div></a><a class="pagination-related" href="/posts/43573e8b.html" title="Item32：使用初始化捕获来移动对象到闭包中"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-15</div><div class="info-item-2">Item32：使用初始化捕获来移动对象到闭包中</div></div><div class="info-2"><div class="info-item-1">C++11 lambda 的捕获短板我们知道 C++11 的 lambda 只有按值捕获和按引用捕获两种方式，但这两种方式都有局限，满足不了一些特殊场景：  对于只能移动、不能拷贝的对象，比如std::unique_ptr、std::future，C++11 根本没法把它们放进闭包； 对于拷贝成本很高的对象（比如大容器std::vector），我们只想移动进闭包节约开销，C++11 也做不到，只能被迫拷贝。  这是 C++11 lambda 设计上的一个明显缺陷，而 C++14 直接补上了这个短板。 C++14 的完美解决方案：初始化捕获（init capture）C++14 引入了初始化捕获，也叫通用 lambda 捕获，它的灵活性极强，移动捕获只是它的核心用法之一，甚至能直接在捕获里创建对象，完全覆盖了 C++11 捕获的功能，还能做更多事。 1. 初始化捕获的语法逻辑1[闭包内的数据成员名 = 初始化表达式]   等号左侧：是 lambda 闭包类里自定义的数据成员名称； 等号右侧：是初始化这个成员的表达式，可以是移动、函数调用、临时对象等。  两者作用域不同：左侧属于闭包...</div></div></div></a><a class="pagination-related" href="/posts/ffdb8621.html" title="Item34：考虑使用 lambda 而非 bind"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-15</div><div class="info-item-2">Item34：考虑使用 lambda 而非 bind</div></div><div class="info-2"><div class="info-item-1">lambda 全面优于 std::bind（C++14 中无例外）lambda 相比std::bind更易读、表达力更强、性能更高；仅在 C++11 的两个特殊场景下，std::bind有少量合理用途，而 C++14 中 lambda 的增强特性让std::bind完全失去使用价值。 可读性对比：lambda 直观，std::bind 晦涩且易踩坑以setAlarm（设置闹钟）为例，对比两者的实现差异： lambda 版本（清晰易懂）12345auto setSoundL = [](Sound s) &#123;    using namespace std::chrono;    using namespace std::literals; // C++14时间字面量    setAlarm(steady_clock::now() + 1h, s, 30s); // 直接调用，参数清晰&#125;;   直接调用目标函数setAlarm，参数传递、求值时机一目了然； 即使是 lambda 新手，也能快速理解 “lambda 的形参s传给setAlarm第二个参数”； C++14...</div></div></div></a><a class="pagination-related" href="/posts/52c049c7.html" title="基础与语法与数据结构：数据类型与变量"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">基础与语法与数据结构：数据类型与变量</div></div><div class="info-2"><div class="info-item-1">核心要点速览 数据类型分类：基本类型、复合（派生）类型、自定义类型 核心复合类型：指针、引用、数组、结构体、联合体、枚举 变量关键特性：存储类别（auto&#x2F;static&#x2F;extern 等）、初始化要求、作用域与生命周期 常量核心：const（只读）、constexpr（编译期常量） 类型转换：隐式转换（编译器自动）、显式转换（四种强制转换）   一、数据类型1.1 基本类型基本类型是 C++ 内置的基础数据类型，具有固定内存大小（部分受平台影响）和明确取值范围。    类型 典型大小（32&#x2F;64 位系统） 含义 &#x2F; 范围 面试考点    bool 1 字节 布尔值：true（1）&#x2F;false（0） sizeof(bool)恒为 1；不可用 0 &#x2F; 非 0 代替（语法允许但不规范）   char 1 字节 ASCII 码：-128127 或 0255 区分signed char（带符号）和unsigned char（无符号）；默认符号性由编译器决定   short 2 字节 短整数：-32768~32767 与short ...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Sean</div><div class="author-info-description">像风走了八千里，不问归期</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">74</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">88</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Devilsean"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">载着零散思绪与滚烫热爱，与同频的你相遇。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B-lambda-%E7%9A%84%E6%9C%AC%E8%B4%A8%E4%B8%8E%E5%88%9D%E5%A7%8B%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">泛型 lambda 的本质与初始问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%E7%9A%84%E5%88%9D%E6%AD%A5%E5%B0%9D%E8%AF%95%E4%B8%8E%E9%9A%9C%E7%A2%8D"><span class="toc-number">2.</span> <span class="toc-text">完美转发的初步尝试与障碍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%9A%9C%E7%A2%8D%EF%BC%9Adecltype-std-forward-%E7%9A%84%E7%BB%84%E5%90%88%E9%80%BB%E8%BE%91"><span class="toc-number">3.</span> <span class="toc-text">解决障碍：decltype + std::forward 的组合逻辑</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-1%EF%BC%9Adecltype-%E5%AF%B9%E9%80%9A%E7%94%A8%E5%BC%95%E7%94%A8%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC%E8%A7%84%E5%88%99"><span class="toc-number">3.1.</span> <span class="toc-text">原理 1：decltype 对通用引用的类型推导规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-2%EF%BC%9Astd-forward-%E5%AF%B9%E5%8F%B3%E5%80%BC%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E5%8F%82%E6%95%B0%E7%9A%84%E5%85%BC%E5%AE%B9"><span class="toc-number">3.2.</span> <span class="toc-text">原理 2：std::forward 对右值引用类型参数的兼容</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">4.</span> <span class="toc-text">最终解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E5%8F%82%E6%95%B0%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91"><span class="toc-number">4.1.</span> <span class="toc-text">单参数完美转发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E5%8F%82%E6%95%B0%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91%EF%BC%88%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">多参数完美转发（可变参数）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/22b7bef.html" title="Item1：理解模板类型推导"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Item1：理解模板类型推导"/></a><div class="content"><a class="title" href="/posts/22b7bef.html" title="Item1：理解模板类型推导">Item1：理解模板类型推导</a><time datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b10f45c0.html" title="Item3：理解 decltype 类型推导"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Item3：理解 decltype 类型推导"/></a><div class="content"><a class="title" href="/posts/b10f45c0.html" title="Item3：理解 decltype 类型推导">Item3：理解 decltype 类型推导</a><time datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/c58a05ed.html" title="Item2：理解 auto 类型推导"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Item2：理解 auto 类型推导"/></a><div class="content"><a class="title" href="/posts/c58a05ed.html" title="Item2：理解 auto 类型推导">Item2：理解 auto 类型推导</a><time datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/989c0ec7.html" title="Item4：掌握查看类型推导结果的方法"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Item4：掌握查看类型推导结果的方法"/></a><div class="content"><a class="title" href="/posts/989c0ec7.html" title="Item4：掌握查看类型推导结果的方法">Item4：掌握查看类型推导结果的方法</a><time datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/604f8623.html" title="Item10：优先选用限域枚举，而非不限域枚举"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Item10：优先选用限域枚举，而非不限域枚举"/></a><div class="content"><a class="title" href="/posts/604f8623.html" title="Item10：优先选用限域枚举，而非不限域枚举">Item10：优先选用限域枚举，而非不限域枚举</a><time datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Sean</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button><button id="go-down" type="button" title="直达底部" onclick="btf.scrollToDest(document.body.scrollHeight, 500)"><i class="fas fa-arrow-down"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://comment-psi-gilt.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://comment-psi-gilt.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><canvas id="snow"></canvas><script async src="/js/snow.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function history_calendar_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-history"> <!-- 挂载容器 --> <div class="card-content"> <div class="item-headline"> <i class="fas fa-clock fa-spin"></i> <span>那年今日</span> </div> <div id="history-baidu" style="height: 100px;overflow: hidden"> <!-- 挂载器 --> <div class="history_swiper-container" id="history-container" style="width: 100%;height: 100%"> <div class="swiper-wrapper" id="history_container_wrapper" style="height:20px"></div> </div> </div> </div>';
+                console.log('已挂载history_calendar')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            history_calendar_injector_config()
+        } </script><script data-pjax  src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script><script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-card-history/baiduhistory/js/main.js"></script><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/5c7e22c2.html" alt=""><img width="48" height="48" src="../../img/post/tengwangge.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-01</span><a class="blog-slider__title" href="posts/5c7e22c2.html" alt="">滕王阁序</a><div class="blog-slider__text">难得糊涂</div><a class="blog-slider__button" href="posts/5c7e22c2.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/9a70fb8f.html" alt=""><img width="48" height="48" src="../../img/post/gongbaitou.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-29</span><a class="blog-slider__title" href="posts/9a70fb8f.html" alt="">共白头</a><div class="blog-slider__text">难得糊涂</div><a class="blog-slider__button" href="posts/9a70fb8f.html" alt="">详情   </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><script data-pjax>
+    function butterfly_categories_card_injector_config(){
+      var parent_div_git = document.getElementById('recent-posts');
+      var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 380px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 320px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"><li class="categoryBar-list-item" style="background:url(./img/poem.png);"> <a class="categoryBar-list-link" href="categories/诗词歌赋/">诗词歌赋</a><span class="categoryBar-list-count">2</span><span class="categoryBar-list-descr">有格调</span></li><li class="categoryBar-list-item" style="background:url(./img/fwC++.png);"> <a class="categoryBar-list-link" href="categories/C/">C++</a><span class="categoryBar-list-count">30</span><span class="categoryBar-list-descr">有生活</span></li><li class="categoryBar-list-item" style="background:url(./img/Effective-Modern-C++.jpg);"> <a class="categoryBar-list-link" href="categories/Effective-Modern-C/">Effective Modern C++</a><span class="categoryBar-list-count">42</span><span class="categoryBar-list-descr">有品位</span></li></ul></div></div>';
+      console.log('已挂载butterfly_categories_card')
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+      }
+    if( document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    butterfly_categories_card_injector_config()
+    }
+  </script><div class="js-pjax"><script async="async">var arr = document.getElementsByClassName('recent-post-item');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '1s');
+    arr[i].setAttribute('data-wow-delay', '0s');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script><script async="async">var arr = document.getElementsByClassName('card-widget');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '');
+    arr[i].setAttribute('data-wow-delay', '');
+    arr[i].setAttribute('data-wow-offset', '');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script></div><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow.min.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow_init.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/miku.model.json"},"display":{"position":"left","width":200,"height":350,"hOffset":-15,"vOffset":18},"mobile":{"show":true},"react":{"opacity":0.8},"log":false});</script></body></html>

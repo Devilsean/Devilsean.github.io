@@ -326,7 +326,7 @@ reinterpret_cast
   </entry>
   <entry>
     <title>基础与语法与数据结构：程序结构与预处理</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/a6924b40.html</url>
     <content><![CDATA[核心要点速览
 流程：预处理→编译→汇编→链接→执行
 程序入口：main 函数（返回值 int，return 0 表示正常退出）
@@ -4427,7 +4427,7 @@ getPoint()返回临时对象，生命周期仅在当前语句结束前。auto&am
   </entry>
   <entry>
     <title>Item1：理解模板类型推导</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/22b7bef.html</url>
     <content><![CDATA[函数模板形如：
 template&lt;typename T&gt; void f(ParamType param);
 
@@ -4585,7 +4585,7 @@ int num;ifs &gt;&gt; num; ifs.ignore(numeric_limits&lt;streamsize&gt;::max(), &#
   </entry>
   <entry>
     <title>Item3：理解 decltype 类型推导</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/b10f45c0.html</url>
     <content><![CDATA[个人认为原著写的非常晦涩难懂，所以精简如下：
 decltype用于告知名字或表达式的类型：
 const int i = 0;               // decltype(i) 是 const intbool f(const Widget&amp; w);       // decltype(w) 是 const Widget&amp;；decltype(f) 是 bool(const Widget&amp;)struct Point &#123;  int x, y;&#125;;                             // decltype(Point::x) 是 int；decltype(Point::y) 是 intWidget w;                      // decltype(w) 是 Widgetif (f(w)) ...                  // decltype(f(w)) 是 booltemplate&lt;typename T&gt;           // std::vector 的简化版class vector &#123;public:  ...  T&amp; operator[](std::size_t index);  ...&#125;;vector&lt;int&gt; v;...if (v[0] == 0) ...             // decltype(v[0]) 是 int&amp;
@@ -4624,7 +4624,7 @@ C++14 支持 decltype(auto) ，和 auto 一样，它会从其初始化表达式�
   </entry>
   <entry>
     <title>Item2：理解 auto 类型推导</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/c58a05ed.html</url>
     <content><![CDATA[推导方式和[[1. 理解模板类型推导]]一致，下面讨论不同点：
 在初始化时，采用auto声明变量相比于采用固定类型声明变量更具优势。下列声明都能通过编译，但是结果却并不相同：
 auto x1 = 27; // 类型是int，值是27auto x2(27); // 同上auto x3 = &#123;27&#125;; // 类型是std::initializer_list&lt;int&gt;，值是&#123;27&#125;auto x4&#123;27&#125;; //同上 
@@ -4659,7 +4659,7 @@ template&lt;typename T&gt; void f(std::initializer_list&lt;T&gt; initlist); f(&#
   </entry>
   <entry>
     <title>Item4：掌握查看类型推导结果的方法</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/989c0ec7.html</url>
     <content><![CDATA[采用何种工具来查看型别推导结果，取决于在软件开发过程的哪个阶段需要该信息。三个可能的阶段：撰写代码阶段、编译阶段和运行时阶段。
 IDE编辑器IDE 中的代码编辑器通常会在你将鼠标指针悬停至某个程序实体，如变量、形参、函数等时，显示出该实体的类型。例如：
 const int theAnswer = 42;auto x = theAnswer;auto y = &amp;theAnswer;
@@ -4694,7 +4694,7 @@ std::cout &lt;&lt; typeid(x).name() &lt;&lt; &#x27;\n&#x27;; //display types for
   </entry>
   <entry>
     <title>Item10：优先选用限域枚举，而非不限域枚举</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/604f8623.html</url>
     <content><![CDATA[使用限域enum来减少命名空间污染通用规则：如果在一对大括号里声明一个名字，则该名字的可见性限定在括号括起来的作用域内。
 但这个规则不适用于 C++98 风格的枚举类型中定义的枚举变量：枚举变量的属于包含着这个枚举类型的作用域，此作用域内不能有其他实体取相同的名字。
 enum Color &#123; black, white, red &#125;; //black, white, red在Color所在的作用域auto white = false; //错误! white早已在这个作用域中声明
@@ -4761,7 +4761,7 @@ C++98风格的枚举类型，现在称为不限范围的枚举类型。
   </entry>
   <entry>
     <title>Item12：使用override重写声明函数</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/359d6da1.html</url>
     <content><![CDATA[面向对象编程的基本理念是：在派生类中虚函数实现，会改写基类中对应虚函数的实现。
 虚函数重写的约束条件要想重写一个函数，必须满足下列要求：
 
@@ -4813,7 +4813,7 @@ void doSomething(Widegt&amp; w); // 仅接受右值的Widgets类型
   </entry>
   <entry>
     <title>Item6：当auto推导的类型不符合要求时，使用显式类型初始化习惯用法</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/748f5f56.html</url>
     <content><![CDATA[个人认为原著写的非常难懂，所以精简总结如下：
 auto与代理类的问题当使用auto进行类型推导时，如果表达式返回的是代理类，auto会推导出代理类型而不是被代理的实际类型，可能导致未定义行为。
 例如：
@@ -4865,7 +4865,7 @@ std::vector&lt;bool&gt;的相关操作：位无独立地址，无法返回引用
   </entry>
   <entry>
     <title>Item5：优先使用 auto，而非显式类型声明</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/a8adcefc.html</url>
     <content><![CDATA[传统显示类型声明存在的问题1. 忘记初始化产生未知行为但是，auto声明的变量其类型推导自其初始化表达式，所以它们必须初始化：
 int x1; // 有潜在的未初始化风险 auto x2; // 编译错误！必须有初始化表达式auto x3 = 0; // 没问题， x 已经定义了
 
@@ -4902,7 +4902,7 @@ auto类型的变量都有着2和6中所描述的毛病。
   </entry>
   <entry>
     <title>Item13：优先选用const_iterator，而非iterator</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/e8f61677.html</url>
     <content><![CDATA[STL 的const_iterator等价于 “指向常量的指针（pointer-to-const）”，指向的值不可修改，符合 “能加const就加” 的通用编程准则 —— 只要无需修改迭代器指向的值，就应优先使用const_iterator；但该迭代器的实用性随 C++ 版本迭代大幅提升，C++11 是关键转折点，同时通用代码中需优先使用非成员函数版本的begin/end/cbegin等。
 各 C++ 版本对 const_iterator 的支持差异1. C++98：支持残缺，实用性差const_iterator理论上符合规范，但实际使用存在两大痛点：
 
@@ -4948,7 +4948,7 @@ C++14 补全了这些非成员函数，满足 “最大程度通用的库代码�
   </entry>
   <entry>
     <title>Item15：尽可能使用constexpr</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/62728637.html</url>
     <content><![CDATA[constexpr作用于对象时，是加强版的const；但作用于函数时含义截然不同 —— 它并非简单限定 “返回 const 值” 或 “结果编译期可知”，而是根据调用场景动态适配。
 
 constexpr对象：必然具备const只读属性，且必须由编译期可知的值完成初始化（技术上是翻译期，包含编译 + 链接，编程层面可视为编译期）。
@@ -4999,7 +4999,7 @@ constexpr函数在调用时若传入的实参值是编译器已知的，则会�
   </entry>
   <entry>
     <title>Item11：优先选用删除函数，而非private未定义函数</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/ab91616b.html</url>
     <content><![CDATA[主要考虑复制构造函数和复制赋值运算符：C++ 会自动生成这类特殊成员函数，但部分场景（如iostream的basic_ios类）中拷贝操作存在逻辑歧义（如流的读取状态、资源句柄拷贝混乱），因此需要主动禁止这些函数被调用。
 C++98 禁止函数调用的方案：私有声明 + 未定义为阻止复制构造 &#x2F; 赋值运算符被使用，C++98 采取 “声明为 private + 不定义” 的方式：
 template &lt;class charT, class traits = char_traits&lt;charT&gt;&gt;class basic_ios : public ios_base &#123;public:    …private:    basic_ios(const basic_ios&amp; );           // not defined    basic_ios&amp; operator=(const basic_ios&amp;); // not defined&#125;;
@@ -5047,7 +5047,7 @@ class Widget &#123;public:    template&lt;typename T&gt;    void processPointer(
   </entry>
   <entry>
     <title>Item14：只要函数不抛出异常就加上noexcept声明</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/4b0a629a.html</url>
     <content><![CDATA[ C++11 的noexcept是替代 C++98 废弃异常说明的核心特性，作为函数接口的关键组成部分，仅当确定函数永远不会抛出异常时声明；其核心价值是让编译器生成更高效的目标代码，同时为调用者 &#x2F; STL 提供明确的异常安全承诺，且不可为了加noexcept扭曲函数实现，大多数函数因 “异常中立” 无需声明。
 noexcept的核心价值性能层面：编译器最大化优化代码
 逻辑：noexcept承诺 “函数异常传播时可直接终止程序”，编译器无需保证调用栈完整展开、局部对象按构造反序析构，因此可剔除冗余代码，生成更精简高效的机器码；
@@ -5125,7 +5125,7 @@ noexcept函数可被编译器极致优化，且是 STL 移动语义、swap函数
   </entry>
   <entry>
     <title>Item16：让const成员函数线程安全</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/cafb5bbb.html</url>
     <content><![CDATA[const 成员函数承诺 “不修改对象核心逻辑状态”，但常因mutable修饰的辅助变量（如多项式根的缓存rootVals、缓存有效标记rootsAreValid），在执行时修改这些变量；
 多线程同时调用该 const 函数时，会出现 “不同线程读写同一块内存” 的数据竞争，导致程序行为未定义（即使逻辑上是 “读操作”）。
 线程安全的解决方案1. 基础方案：使用std::mutex
@@ -5194,7 +5194,7 @@ std::atomic
   </entry>
   <entry>
     <title>Item17：理解特殊成员函数的生成机制</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/9c611c4.html</url>
     <content><![CDATA[特殊成员函数的定义与分类特殊成员函数指 C++ 编译器会自动生成的成员函数，不同标准版本涵盖范围不同：
 
 C++98：包含 4 种：默认构造函数、析构函数、复制构造函数、复制赋值运算符
@@ -5275,7 +5275,7 @@ C++11 中各类特殊成员函数的生成规则
   </entry>
   <entry>
     <title>Item7：在创建对象时注意区分()和{}</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/ff707fc2.html</url>
     <content><![CDATA[初始化的基本方式指定初始化的方式包括使用小括号、使用等号，或是使用大括号：
 int x(0);int y = 0;int z&#123;0&#125;;
 
@@ -5352,7 +5352,7 @@ class Widget &#123; public:      Widget();                                   // 
   </entry>
   <entry>
     <title>Item8：优先选用nullptr，而非0或NULL</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/95bd36d4.html</url>
     <content><![CDATA[当C++在只能使用指针的语境中发现了0会把勉强解释为空指针，但是C++的基本观点还是0和NULL的类型是int，而非指针。
 在C++98中，这样的观点可能在指针类型和整型之间进行重载时可能会发生意外：
 void f(int);        // 整型版本void f(bool);       // 布尔版本void f(void*);      // 指针版本f(0);               // 调用 f(int)，而不是 f(void*)！f(NULL);            // 可能通不过编译，但一般会调用 f(int)。从来不会调用 f(void*)f(nullptr);         // 正确调用 f(void*)
@@ -5379,7 +5379,7 @@ int f1(std::shared_ptr&lt;Widget&gt; spw); double f2(std::unique_ptr&lt;Widget&g
   </entry>
   <entry>
     <title>Item18：使用独占指针管理具备专属所有权的资源</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/5763250.html</url>
     <content><![CDATA[std::unique_ptr 的特性
 轻量高效：默认删除器下，大小和原始指针一致，操作（如解引用）的执行效率和原始指针几乎无差别，可用于内存 &#x2F; 性能敏感场景。
 独占所有权：一个非空的 std::unique_ptr 独占指向的资源，仅可移动（move-only）、不可拷贝—— 拷贝会导致两个指针同时管理同一资源，析构时重复销毁；移动则会将所有权从源指针转移到目标指针（源指针置空）。
@@ -5432,7 +5432,7 @@ std::unique_ptr 是轻量、高效的 “独占所有权” 智能指针，仅�
   </entry>
   <entry>
     <title>Item9：优先选用别名声明，而非typedef</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/67645f13.html</url>
     <content><![CDATA[具有两种声明别名的方法：
 typedef std::unique_ptr&lt;std::unordered_map&lt;std::string, std::string&gt;&gt; UPtrMapSS; using UPtrMapSS = std::unique_ptr&lt;std::unordered_map&lt;std::string, std::string&gt;&gt;;
 
@@ -5473,7 +5473,7 @@ typedef不支持模板化，但别名声明支持。
   </entry>
   <entry>
     <title>Item19：对于共享资源使用共享指针</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/3151d289.html</url>
     <content><![CDATA[定位与实现原理
 功能：管理共享所有权的资源，兼具 “自动垃圾回收”（无需手动管理生命周期）和 “销毁可预测”（最后一个指向资源的 shared_ptr 销毁时，资源确定销毁）的优势，比纯垃圾回收语言的资源管理更通用、销毁时机更可控。
 
@@ -5538,7 +5538,7 @@ std::shared_ptr 是共享所有权资源的 “自动垃圾回收” 方案，�
   </entry>
   <entry>
     <title>Item20：当shared_ptr可能悬空时使用weak_ptr</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/72706006.html</url>
     <content><![CDATA[std::weak_ptr 是 std::shared_ptr 的辅助智能指针，不独立存在，特点如下：
 
 不参与资源所有权共享，不影响指向对象的引用计数
@@ -5612,7 +5612,7 @@ std::weak_ptr 的三大典型场景：缓存、观察者列表、打破 shared_p
   </entry>
   <entry>
     <title>Item21：优先使用make_unique和make_shared而非直接使用new</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/81074862.html</url>
     <content><![CDATA[
 std::make_shared是 C++11 标准的，而std::make_unique直到 C++14 才加入；
 如果用 C++11，可手写简易版make_unique（仅支持基础场景，不支持数组 &#x2F; 自定义析构），但注意不要放到std命名空间，避免和 C++14 标准库冲突；
@@ -5666,7 +5666,7 @@ auto widgetDeleter = [](Widget* pw) &#123; /* 自定义析构逻辑 */ &#125;;//
   </entry>
   <entry>
     <title>Item22：使用Pimpl习惯用法时，将特殊成员函数的定义放到实现文件中</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/38061a7c.html</url>
     <content><![CDATA[Pimpl 的价值Pimpl 的目的是减少编译依赖、加快编译速度：
 
 传统写法中，Widget的头文件依赖std::string、std::vector、Gadget等头文件，一旦这些依赖变更，所有包含Widget.h的代码都要重新编译；
@@ -5733,7 +5733,7 @@ Pimpl 的价值是减少编译依赖、加快编译速度，现代 C++ 优先用
   </entry>
   <entry>
     <title>Item23：理解move和forward</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/ad06c595.html</url>
     <content><![CDATA[两者的本质是编译期类型转换，运行时无任何操作
 std::move不移动任何数据，std::forward不转发任何数据；
 它们都是函数模板，仅在编译期对参数做值类别转换（左值→右值，或条件性转换），运行时不生成任何可执行代码（一字节都没有）；
@@ -5790,7 +5790,7 @@ std::forward有条件转换：仅当参数原始是右值时，才转为右值�
   </entry>
   <entry>
     <title>Item24：区分万能引用和右值引用</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/2ac8cf47.html</url>
     <content><![CDATA[T&amp;&amp;有两种身份，并非只有右值引用
 我们默认T&amp;&amp;是右值引用，但事实是，T&amp;&amp;在源码中可能有两种完全不同的含义；
 第一种：真正的右值引用—— 只能绑定到右值（临时对象、std::move后的对象），核心作用是识别可移动的对象；
@@ -5858,7 +5858,7 @@ auto&amp;&amp;也是通用引用，可绑定任何对象，常见于 C++14 lambd
   </entry>
   <entry>
     <title>Item25：对右值引用使用move，对通用引用使用forward</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/8f5ddf79.html</url>
     <content><![CDATA[右值引用用 std::move，通用引用用 std::forward
 右值引用（T&amp;&amp;，仅绑定右值）：只能绑定 “可以被移动” 的对象（比如临时对象、被 std::move 转换的左值），你能确定这个对象的所有权可以被转移。
 通用引用（T&amp;&amp;，模板中）：也叫转发引用，可能绑定左值（如局部变量）或右值（如临时对象），无法提前确定是否能移动。
@@ -5936,7 +5936,7 @@ C++ 标准规定，满足 RVO 条件时，编译器要么消除拷贝，要么�
   </entry>
   <entry>
     <title>Item26：避免重载通用引用</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/16df8e14.html</url>
     <content><![CDATA[通用引用太 “贪婪”，会抢走所有重载匹配
 通用引用是模板 T&amp;&amp;，对任何类型实参都能精确匹配；
 普通重载（如 int、const std::string&amp;）需要类型转换 &#x2F; 提升时，永远赢不过通用引用。
@@ -5984,7 +5984,7 @@ class SpecialPerson : public Person &#123;    SpecialPerson(const SpecialPerson&
   </entry>
   <entry>
     <title>Item27：熟悉通用引用重载的替代方法</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/72bf24bf.html</url>
     <content><![CDATA[前提Item26 已证明：通用引用 + 普通重载 &#x3D; 必出问题（劫持调用、编译报错、破坏拷贝 &#x2F; 移动构造、继承失效）。
 本条款给出5 种合法替代方案，从简单到高级，覆盖所有场景。
 5 种通用引用重载的替代方案1. 放弃重载，直接改函数名
@@ -6062,7 +6062,7 @@ std::enable_if 是唯一能让通用引用 + 重载合法共存的方法，靠�
   </entry>
   <entry>
     <title>Item41：对于移动成本低且总是被拷贝的可拷贝形式参，考虑按值传递</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/97c5049f.html</url>
     <content><![CDATA[为什么要重新审视 “传值”？传统上，要实现 “左值拷贝、右值移动” 有两种方式，但都有缺陷：
 
 重载方案：写两个函数（const T&amp; 处理左值、T&amp;&amp; 处理右值），代码冗余（两份声明 &#x2F; 实现 &#x2F; 维护），目标代码也会生成两份；
@@ -6121,7 +6121,7 @@ std::enable_if 是唯一能让通用引用 + 重载合法共存的方法，靠�
   </entry>
   <entry>
     <title>Item42：考虑使用置入代替插入</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/ba51ccd3.html</url>
     <content><![CDATA[插入函数的隐含性能开销对于存储 std::string 的标准容器（如 std::vector&lt;std::string&gt;），使用插入函数（push_back&#x2F;push_front&#x2F;insert 等）添加元素时，存在隐含的临时对象构造与销毁开销。
 示例：
 std::vector&lt;std::string&gt; vs;vs.push_back(&quot;xyzzy&quot;);
@@ -6206,7 +6206,7 @@ emplace_back(nullptr) 虽能编译，但空指针不是合法正则表达式，�
   </entry>
   <entry>
     <title>Item31：避免使用默认捕获模式</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/470b784c.html</url>
     <content><![CDATA[
 lambda 表达式：代码中的匿名函数片段（比如std::find_if中[](int val){ return 0&lt;val &amp;&amp; val&lt;10; }这行），是编译期的代码片段；
 闭包：lambda 在运行时创建的对象，持有捕获数据的副本 &#x2F; 引用（比如传给find_if的第三个实参就是闭包）；
@@ -6273,7 +6273,7 @@ C++14：用通用 lambda 捕获（[divisor = divisor]）直接拷贝成员；
   </entry>
   <entry>
     <title>Item29：认识移动操作的缺点</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/c7b199cf.html</url>
     <content><![CDATA[移动语义是 C++11 最核心的特性之一：它能在满足特定条件时，用低开销的移动操作替代高开销的复制操作，甚至能让 C++98 的代码重新编译后直接获得性能提升。但也正因如此，移动语义的效果和适用范围被普遍夸大，本条款的目的是让开发者理性看待移动语义，避免过度乐观。
 移动语义无优势 &#x2F; 失效的场景移动语义无法带来性能提升、甚至直接退化为复制操作的四类典型场景：
 
@@ -6301,7 +6301,7 @@ C++14：用通用 lambda 捕获（[divisor = divisor]）直接拷贝成员；
   </entry>
   <entry>
     <title>Item30：熟悉完美转发失败的情况</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/5d247cc5.html</url>
     <content><![CDATA[完美转发
 转发：把一个函数的形参（限定为引用类型，避免拷贝原始对象、不强迫调用者传指针）传递给另一个函数，目标是让被转发的函数拿到和原始调用完全相同的对象。
 完美：不仅转发对象本身，还转发对象的核心特征 —— 类型、是左值 &#x2F; 右值、是否 const&#x2F;volatile。
@@ -6376,7 +6376,7 @@ auto length = static_cast&lt;std::uint16_t&gt;(h.totalLength); // 拷贝位域fw
   </entry>
   <entry>
     <title>Item28：理解引用折叠</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/5cbd4994.html</url>
     <content><![CDATA[引用折叠是 C++11 引入的底层编译期规则，是通用引用（转发引用）、std::forward能正常工作的核心 ——C++ 语法明确禁止显式声明 “引用的引用”（比如int&amp; &amp;），但编译器在特定场景下会隐式生成引用的引用，此时靠 “引用折叠规则” 将其化简为单个引用，这也是通用引用能同时绑定左值 &#x2F; 右值的根本原因。
 通用引用的类型推导编码规则对于通用引用模板：
 template&lt;typename T&gt;void func(T&amp;&amp; param); // param是通用引用
@@ -6478,7 +6478,7 @@ template&lt;typename T&gt;class Widget &#123;public:    typedef T&amp;&amp; Rval
   </entry>
   <entry>
     <title>Item32：使用初始化捕获来移动对象到闭包中</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/43573e8b.html</url>
     <content><![CDATA[C++11 lambda 的捕获短板我们知道 C++11 的 lambda 只有按值捕获和按引用捕获两种方式，但这两种方式都有局限，满足不了一些特殊场景：
 
 对于只能移动、不能拷贝的对象，比如std::unique_ptr、std::future，C++11 根本没法把它们放进闭包；
@@ -6529,7 +6529,7 @@ C++11 没有初始化捕获，就通过手写仿函数类或者std::bind的方�
   </entry>
   <entry>
     <title>Item34：考虑使用 lambda 而非 bind</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/ffdb8621.html</url>
     <content><![CDATA[lambda 全面优于 std::bind（C++14 中无例外）lambda 相比std::bind更易读、表达力更强、性能更高；仅在 C++11 的两个特殊场景下，std::bind有少量合理用途，而 C++14 中 lambda 的增强特性让std::bind完全失去使用价值。
 可读性对比：lambda 直观，std::bind 晦涩且易踩坑以setAlarm（设置闹钟）为例，对比两者的实现差异：
 lambda 版本（清晰易懂）auto setSoundL = [](Sound s) &#123;    using namespace std::chrono;    using namespace std::literals; // C++14时间字面量    setAlarm(steady_clock::now() + 1h, s, 30s); // 直接调用，参数清晰&#125;;
@@ -6589,7 +6589,7 @@ std::bind存在参数求值时机、重载决议、隐式规则等陷阱，而 l
   </entry>
   <entry>
     <title>Item36：如果有异步的必要请指定std::launch::async</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/39678e80.html</url>
     <content><![CDATA[std::async 默认启动策略的本质与问题std::async的默认启动策略并非单一的异步执行（std::launch::async），而是std::launch::async | std::launch::deferred（异步 + 延迟执行的组合）。其底层逻辑是：系统自主决定任务是异步在新线程执行，还是延迟到调用future的get()&#x2F;wait()时同步执行。
 这一设计的初衷是让标准库灵活管理线程资源（避免资源超额 &#x2F; 线程耗尽），但核心问题是：默认策略完全失去了对任务执行方式的可控性，引发一系列不确定性。
 默认策略引发的执行不确定性坑 1：执行方式不可控
@@ -6626,7 +6626,7 @@ std::async默认策略是async|deferred，系统自主选择异步 &#x2F; 延迟
   </entry>
   <entry>
     <title>Item33：对于auto&amp;&amp;形参使用decltype以及forward它们</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/e7b54117.html</url>
     <content><![CDATA[泛型 lambda 的本质与初始问题C++14 的泛型 lambda 允许在形参中使用auto，它的底层实现是：lambda 对应的闭包类中，operator()会被编译成一个模板函数。比如：
 auto f = [](auto x) &#123; return func(normalize(x)); &#125;;
 
@@ -6675,7 +6675,7 @@ C++14 泛型 lambda 的auto形参本质是闭包类模板化的operator()，直�
   </entry>
   <entry>
     <title>Item35：优先考虑基于任务的编程而非基于线程的编程</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/f95ae6f2.html</url>
     <content><![CDATA[两种异步执行方式的直观对比基于线程（thread-based）：直接创建 std::threadint doAsyncWork();std::thread t(doAsyncWork); // 直接创建线程执行函数
 
 
@@ -6749,7 +6749,7 @@ C++ 中 “软件线程” 的句柄，可能为空（默认构造、移动、jo
   </entry>
   <entry>
     <title>Item37：使thread在所有路径最后都不可结合</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/a38f6e27.html</url>
     <content><![CDATA[std::thread 的可结合 &#x2F; 不可结合状态本质std::thread 对象仅有两种状态，其中可结合状态是风险点：
 
 可结合（joinable）：对应 “正在运行 &#x2F; 待调度 &#x2F; 已结束但未执行 join/detach” 的底层线程，此状态下析构 std::thread 会直接导致程序终止；
@@ -6784,7 +6784,7 @@ std::thread 的可结合状态是高危状态，必须确保所有执行路径�
   </entry>
   <entry>
     <title>Item39：对于一次性事件通信考虑使用void的futures</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/64fbc879.html</url>
     <content><![CDATA[一次性事件通信
 方向：检测任务 → 反应任务（单方向）；
 内容：仅传递 “事件已发生” 的信号，无需传递具体数据；
@@ -6862,7 +6862,7 @@ void promise/future 是一次性事件通信的最优解：无锁、无虚假唤
   </entry>
   <entry>
     <title>Item40：对于并发使用atomic，对于特殊内存使用volatile</title>
-    <url>/posts/43ae7cb1.html</url>
+    <url>/posts/66ace952.html</url>
     <content><![CDATA[为什么要区分这两个关键字？volatile 之所以被拿来和并发编程混为一谈，是因为：
 
 其他语言（Java&#x2F;C#）中 volatile 有并发语义；

@@ -1,0 +1,347 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Item39：对于一次性事件通信考虑使用void的futures | 肖恩的博客</title><meta name="author" content="Sean"><meta name="copyright" content="Sean"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一次性事件通信 方向：检测任务 → 反应任务（单方向）； 内容：仅传递 “事件已发生” 的信号，无需传递具体数据； 次数：仅一次（事件触发后无需重复通知）； 要求：反应任务需真正阻塞（不占用 CPU）、无通知丢失、无虚假唤醒。  方案 1：条件变量（condvar）—— 设计别扭的 “标配”1. 多余的互斥锁（代码异味）条件变量必须配合互斥锁使用（C++11 API 强制要求），但一次性事件通信中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Item39：对于一次性事件通信考虑使用void的futures">
+<meta property="og:url" content="https://devilsean.github.io/posts/64fbc879.html">
+<meta property="og:site_name" content="肖恩的博客">
+<meta property="og:description" content="一次性事件通信 方向：检测任务 → 反应任务（单方向）； 内容：仅传递 “事件已发生” 的信号，无需传递具体数据； 次数：仅一次（事件触发后无需重复通知）； 要求：反应任务需真正阻塞（不占用 CPU）、无通知丢失、无虚假唤醒。  方案 1：条件变量（condvar）—— 设计别扭的 “标配”1. 多余的互斥锁（代码异味）条件变量必须配合互斥锁使用（C++11 API 强制要求），但一次性事件通信中">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://devilsean.github.io/img/cover.jpg">
+<meta property="article:published_time" content="2026-03-15T12:00:00.000Z">
+<meta property="article:modified_time" content="2026-10-22T01:47:25.112Z">
+<meta property="article:author" content="Sean">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="future">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://devilsean.github.io/img/cover.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Item39：对于一次性事件通信考虑使用void的futures",
+  "url": "https://devilsean.github.io/posts/64fbc879.html",
+  "image": "https://devilsean.github.io/img/cover.jpg",
+  "datePublished": "2026-03-15T12:00:00.000Z",
+  "dateModified": "2026-10-22T01:47:25.112Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Sean",
+      "url": "https://Devilsean.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://devilsean.github.io/posts/64fbc879.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Item39：对于一次性事件通信考虑使用void的futures',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-card-history/baiduhistory/css/main.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-categories-card@1.0.0/lib/categorybar.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/animate.min.css" media="print" onload="this.media='screen'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 8.1.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">74</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">88</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-info-circle"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/./img/cover.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">肖恩的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">Item39：对于一次性事件通信考虑使用void的futures</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-info-circle"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Item39：对于一次性事件通信考虑使用void的futures</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-22T01:47:25.112Z" title="更新于 2026-10-22 09:47:25">2026-10-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Effective-Modern-C/">Effective Modern C++</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="一次性事件通信"><a href="#一次性事件通信" class="headerlink" title="一次性事件通信"></a>一次性事件通信</h2><ul>
+<li>方向：检测任务 → 反应任务（单方向）；</li>
+<li>内容：仅传递 “事件已发生” 的信号，无需传递具体数据；</li>
+<li>次数：仅一次（事件触发后无需重复通知）；</li>
+<li>要求：反应任务需<strong>真正阻塞</strong>（不占用 CPU）、无通知丢失、无虚假唤醒。</li>
+</ul>
+<h2 id="方案-1：条件变量（condvar）——-设计别扭的-“标配”"><a href="#方案-1：条件变量（condvar）——-设计别扭的-“标配”" class="headerlink" title="方案 1：条件变量（condvar）—— 设计别扭的 “标配”"></a>方案 1：条件变量（condvar）—— 设计别扭的 “标配”</h2><h3 id="1-多余的互斥锁（代码异味）"><a href="#1-多余的互斥锁（代码异味）" class="headerlink" title="1. 多余的互斥锁（代码异味）"></a>1. 多余的互斥锁（代码异味）</h3><p>条件变量必须配合互斥锁使用（C++11 API 强制要求），但一次性事件通信中，检测 &#x2F; 反应任务往往无共享数据需要保护（比如检测任务初始化完数据结构后不再访问，反应任务仅在事件后访问）—— 互斥锁成了 “无意义的强制依赖”。</p>
+<h3 id="2-通知丢失风险"><a href="#2-通知丢失风险" class="headerlink" title="2. 通知丢失风险"></a>2. 通知丢失风险</h3><p>若检测任务在反应任务调用 <code>cv.wait()</code> 前执行 <code>cv.notify_one()</code>，反应任务会永久挂起（因为 wait 时通知已丢失）。</p>
+<h3 id="3-虚假唤醒问题"><a href="#3-虚假唤醒问题" class="headerlink" title="3. 虚假唤醒问题"></a>3. 虚假唤醒问题</h3><p>条件变量存在 “虚假唤醒”（即使未被通知，wait 也可能返回），因此必须配合 “条件判断” 使用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">std::condition_variable cv;</span><br><span class="line">std::mutex m;</span><br><span class="line"><span class="type">bool</span> flag = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 反应任务</span></span><br><span class="line"><span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(m)</span></span>;</span><br><span class="line">cv.<span class="built_in">wait</span>(lk, []&#123; <span class="keyword">return</span> flag; &#125;); <span class="comment">// 必须加lambda判断flag</span></span><br></pre></td></tr></table></figure>
+
+<p>但问题在于：反应任务本就是 “等待事件发生”，若它能自行判断 flag，就无需依赖条件变量 —— 逻辑上形成矛盾。</p>
+<p><strong>结论</strong>：条件变量适合 “重复事件 + 共享数据保护” 场景，不适合一次性无数据的事件通信。</p>
+<h2 id="方案-2：共享布尔-flag-——-无锁但耗资源的轮询"><a href="#方案-2：共享布尔-flag-——-无锁但耗资源的轮询" class="headerlink" title="方案 2：共享布尔 flag —— 无锁但耗资源的轮询"></a>方案 2：共享布尔 flag —— 无锁但耗资源的轮询</h2><p>为规避条件变量的问题，很多开发者会用 <code>std::atomic&lt;bool&gt;</code> 实现 “flag 轮询”：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::atomic&lt;<span class="type">bool</span>&gt; <span class="title">eventOccurred</span><span class="params">(<span class="literal">false</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 检测任务</span></span><br><span class="line">eventOccurred = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 反应任务</span></span><br><span class="line"><span class="keyword">while</span> (!eventOccurred); <span class="comment">// 轮询等待</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>无需互斥锁，设计简单；</li>
+<li>无通知丢失（无论检测任务何时置位 flag，反应任务轮询总能读到）；</li>
+<li>无虚假唤醒（仅依赖 flag 值判断）。</li>
+</ul>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>反应任务的 <code>while (!eventOccurred)</code> 是<strong>忙等（busy waiting）</strong> —— 线程看似 “阻塞”，实则一直在占用 CPU 核心运行，会导致：</p>
+<ul>
+<li>浪费硬件线程资源（本可给其他任务使用）；</li>
+<li>增加上下文切换开销；</li>
+<li>持续占用核心，无法进入低功耗状态（嵌入式 &#x2F; 移动端尤其明显）。</li>
+</ul>
+<p><strong>结论</strong>：flag 轮询仅适合 “事件极短时间内触发” 的场景，不适合长时间等待。</p>
+<h2 id="方案-3：条件变量-flag-——-能工作但不优雅的组合"><a href="#方案-3：条件变量-flag-——-能工作但不优雅的组合" class="headerlink" title="方案 3：条件变量 + flag —— 能工作但不优雅的组合"></a>方案 3：条件变量 + flag —— 能工作但不优雅的组合</h2><p>将前两种方案结合，可解决各自的问题：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">std::condition_variable cv;</span><br><span class="line">std::mutex m;</span><br><span class="line"><span class="type">bool</span> flag = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 检测任务</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">g</span><span class="params">(m)</span></span>;</span><br><span class="line">    flag = <span class="literal">true</span>; <span class="comment">// 置位flag（事件真发生）</span></span><br><span class="line">&#125;</span><br><span class="line">cv.<span class="built_in">notify_one</span>(); <span class="comment">// 唤醒反应任务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 反应任务</span></span><br><span class="line"><span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(m)</span></span>;</span><br><span class="line">cv.<span class="built_in">wait</span>(lk, []&#123; <span class="keyword">return</span> flag; &#125;); <span class="comment">// 避免虚假唤醒+通知丢失</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><ul>
+<li>解决了条件变量的通知丢失、虚假唤醒问题；</li>
+<li>解决了 flag 轮询的 CPU 占用问题（反应任务真正阻塞）。</li>
+</ul>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>设计逻辑割裂：检测任务需 “先置位 flag + 再通知 cv”，反应任务需 “等 cv 唤醒 + 再查 flag”—— 本质是 “用两个操作传递一个事件信号”，代码不自然、可读性差，且仍需维护多余的互斥锁。</p>
+<p><strong>结论</strong>：能工作，但不是最优解。</p>
+<h2 id="方案-4：void-promise-future-——-一次性通信的最优解"><a href="#方案-4：void-promise-future-——-一次性通信的最优解" class="headerlink" title="方案 4：void promise&#x2F;future —— 一次性通信的最优解"></a>方案 4：void promise&#x2F;future —— 一次性通信的最优解</h2><p><code>std::promise</code> 和 <code>std::future</code> 原本用于 “异步任务返回结果”，但可无缝适配 “仅传递事件信号” 的场景 —— 思路是：用 <code>void</code> 类型表示 “仅传递事件发生的信号，无数据”。</p>
+<h3 id="实现（单反应任务）"><a href="#实现（单反应任务）" class="headerlink" title="实现（单反应任务）"></a>实现（单反应任务）</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">std::promise&lt;<span class="type">void</span>&gt; eventPromise; <span class="comment">// 检测任务持有：通信信道的写入端</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 检测任务：事件发生时触发</span></span><br><span class="line">eventPromise.<span class="built_in">set_value</span>(); <span class="comment">// 写入“void信号”，通知反应任务</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 反应任务：等待事件</span></span><br><span class="line">eventPromise.<span class="built_in">get_future</span>().<span class="built_in">wait</span>(); <span class="comment">// 阻塞至信号触发</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
+<li><strong>无多余依赖</strong>：无需互斥锁、无需 flag，代码极简；</li>
+<li><strong>无通知丢失</strong>：无论检测任务何时调用 <code>set_value()</code>，反应任务后续调用 <code>wait()</code> 都会立即返回；</li>
+<li><strong>无虚假唤醒</strong>：future 的 wait 仅在 <code>set_value()</code> 触发后返回，无任何无意义唤醒；</li>
+<li><strong>真正阻塞</strong>：反应任务 wait 时完全释放 CPU，无轮询开销，低功耗、低上下文切换；</li>
+</ol>
+<h3 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h3><ul>
+<li><strong>堆内存开销</strong>：promise&#x2F;future 的 “共享状态”是堆上动态分配的，存在少量内存分配 &#x2F; 释放开销；</li>
+<li><strong>一次性限制</strong>：一个 promise 只能调用一次 <code>set_value()</code>，无法重复用于多次事件通信（这也是 “一次性事件通信” 的场景匹配项）。</li>
+</ul>
+<h3 id="扩展：多反应任务的一次性通知"><a href="#扩展：多反应任务的一次性通知" class="headerlink" title="扩展：多反应任务的一次性通知"></a>扩展：多反应任务的一次性通知</h3><p>若需一个检测任务通知多个反应任务，只需将 <code>std::future&lt;void&gt;</code> 转为 <code>std::shared_future&lt;void&gt;</code>（共享状态可被多个线程引用）：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">std::promise&lt;<span class="type">void</span>&gt; eventPromise;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">react</span><span class="params">()</span></span>; <span class="comment">// 反应任务逻辑</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">detect</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 生成可共享的future</span></span><br><span class="line">    <span class="keyword">auto</span> sharedFuture = eventPromise.<span class="built_in">get_future</span>().<span class="built_in">share</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建多个反应线程</span></span><br><span class="line">    std::vector&lt;std::thread&gt; reactThreads;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; ++i) &#123;</span><br><span class="line">        <span class="comment">// 按值捕获sharedFuture（每个线程持有独立副本）</span></span><br><span class="line">        reactThreads.<span class="built_in">emplace_back</span>([sharedFuture] &#123;</span><br><span class="line">            sharedFuture.<span class="built_in">wait</span>(); <span class="comment">// 等待事件</span></span><br><span class="line">            <span class="built_in">react</span>();</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 触发事件：所有反应线程同时解除阻塞</span></span><br><span class="line">    eventPromise.<span class="built_in">set_value</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 等待所有线程完成</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; t : reactThreads) &#123;</span><br><span class="line">        t.<span class="built_in">join</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="潜在风险：异常导致的线程永久挂起"><a href="#潜在风险：异常导致的线程永久挂起" class="headerlink" title="潜在风险：异常导致的线程永久挂起"></a>潜在风险：异常导致的线程永久挂起</h2><p>若用 RAII（如 ThreadRAII）管理反应线程，需注意：<strong>若检测任务在调用 <code>set_value()</code> 前抛出异常，promise 未被触发，反应线程的 <code>wait()</code> 会永久阻塞</strong>—— 最终导致 RAII 对象析构时调用 <code>join()</code> 也永久挂起。</p>
+<p>解决思路（参考<a target="_blank" rel="noopener" href="http://scottmeyers.blogspot.com/2013/12/threadraii-thread-suspension-trouble.html">ThreadRAII + Thread Suspension &#x3D; Trouble?</a>）：</p>
+<ol>
+<li>给 promise 增加 “取消机制”（比如结合 <code>std::exception_ptr</code> 传递异常）；</li>
+<li>用超时 wait 替代无限 wait（<code>future.wait_for()</code>）；</li>
+<li>捕获检测任务的异常，主动触发 promise 的 <code>set_exception()</code>。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>条件变量适合 “重复事件 + 共享数据保护”，但一次性通信中存在多余互斥锁、通知丢失、虚假唤醒问题；</li>
+<li>共享 flag 无锁但轮询耗资源，仅适合极短时间等待的场景；</li>
+<li>条件变量 + flag 能工作，但设计不优雅、逻辑割裂；</li>
+<li><code>void promise/future</code> 是一次性事件通信的最优解：无锁、无虚假唤醒、真正阻塞、代码极简，仅需接受 “堆内存开销 + 一次性通信” 的限制。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://Devilsean.github.io">Sean</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://devilsean.github.io/posts/64fbc879.html">https://devilsean.github.io/posts/64fbc879.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://Devilsean.github.io" target="_blank">肖恩的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a><a class="post-meta__tags" href="/tags/future/">future</a></div><div class="post-share"><div class="social-share" data-image="/./img/cover.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/66ace952.html" title="Item40：对于并发使用atomic，对于特殊内存使用volatile"><img class="cover" src="/./img/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Item40：对于并发使用atomic，对于特殊内存使用volatile</div></div><div class="info-2"><div class="info-item-1">为什么要区分这两个关键字？volatile 之所以被拿来和并发编程混为一谈，是因为：  其他语言（Java&#x2F;C#）中 volatile 有并发语义；  部分 C++ 编译器给 volatile 加了非标准的并发特性；   但在标准 C++ 中，volatile 和并发毫无关系，而开发者常把它和处理并发的 std::atomic 搞混，这是文章要解决的核心问题。   std::atomic：专为并发设计的原子操作工具 能力：保证对变量的操作（读、写、读 - 改 - 写）是原子性的（不可分割），无需互斥锁，底层通过专用机器指令实现，比锁更高效。  比如 ++ai（ai 是 std::atomic&lt;int&gt;）是完整的原子操作，多线程执行时不会出现 “读 - 改 - 写” 拆分导致的错误； 对比普通变量 &#x2F;volatile 变量的自增：会拆分成 “读值→加 1→写回” 三步，多线程下会出现计数错误（比如两次自增只得到 1 而非 2）。   内存序限制：默认的 “顺序一致性” 模型会限制编译器 &#x2F; 硬件的指令重排，保证操作的执行顺序和代码逻辑一致。...</div></div></div></a><a class="pagination-related" href="/posts/a38f6e27.html" title="Item37：使thread在所有路径最后都不可结合"><img class="cover" src="/./img/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Item37：使thread在所有路径最后都不可结合</div></div><div class="info-2"><div class="info-item-1">std::thread 的可结合 &#x2F; 不可结合状态本质std::thread 对象仅有两种状态，其中可结合状态是风险点：  可结合（joinable）：对应 “正在运行 &#x2F; 待调度 &#x2F; 已结束但未执行 join/detach” 的底层线程，此状态下析构 std::thread 会直接导致程序终止； 不可结合（unjoinable）：安全状态，包括默认构造、已移动、已 join、已 detach 的 std::thread。  可结合线程析构的致命问题（默认处理方式的弊端）标准委员会拒绝为 std::thread 析构提供默认处理（隐式 join/detach），因为两种方式均存在严重问题： 弊端 1：隐式 join（等待线程完成）会引发反直觉的性能异常（比如条件不满足时，仍等待耗时的过滤逻辑执行完毕），调试难度大； 弊端 2：隐式 detach（分离线程）会导致未定义行为：若线程捕获了函数局部变量，函数返回后局部变量销毁，线程仍访问已释放的栈内存，造成内存篡改，调试成本极高。 解决问题：RAII 封装 std::thread（覆盖所有执行路径）要确保...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/52c049c7.html" title="基础与语法与数据结构：数据类型与变量"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">基础与语法与数据结构：数据类型与变量</div></div><div class="info-2"><div class="info-item-1">核心要点速览 数据类型分类：基本类型、复合（派生）类型、自定义类型 核心复合类型：指针、引用、数组、结构体、联合体、枚举 变量关键特性：存储类别（auto&#x2F;static&#x2F;extern 等）、初始化要求、作用域与生命周期 常量核心：const（只读）、constexpr（编译期常量） 类型转换：隐式转换（编译器自动）、显式转换（四种强制转换）   一、数据类型1.1 基本类型基本类型是 C++ 内置的基础数据类型，具有固定内存大小（部分受平台影响）和明确取值范围。    类型 典型大小（32&#x2F;64 位系统） 含义 &#x2F; 范围 面试考点    bool 1 字节 布尔值：true（1）&#x2F;false（0） sizeof(bool)恒为 1；不可用 0 &#x2F; 非 0 代替（语法允许但不规范）   char 1 字节 ASCII 码：-128127 或 0255 区分signed char（带符号）和unsigned char（无符号）；默认符号性由编译器决定   short 2 字节 短整数：-32768~32767 与short ...</div></div></div></a><a class="pagination-related" href="/posts/a6924b40.html" title="基础与语法与数据结构：程序结构与预处理"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">基础与语法与数据结构：程序结构与预处理</div></div><div class="info-2"><div class="info-item-1">核心要点速览 流程：预处理→编译→汇编→链接→执行 程序入口：main 函数（返回值 int，return 0 表示正常退出） 核心预处理指令：#include（头文件包含）、#define（宏定义）、条件编译（#ifdef&#x2F;#ifndef&#x2F;endif）、#pragma once（头文件防重复包含）   核心要点速览 流程：预处理→编译→汇编→链接→执行 程序入口：main 函数（返回值 int，return 0 表示正常退出） 核心预处理指令：#include（头文件包含）、#define（宏定义）、条件编译（#ifdef&#x2F;#ifndef&#x2F;endif）、#pragma once（头文件防重复包含）   一、程序结构 执行流程：预处理→编译→汇编→链接→执行 预处理是编译的第一个阶段，由预处理器处理所有以 #开头的指令，生成 “预处理后的源代码” 预处理核心操作：消除注释、展开宏、处理条件编译、引入头文件内容     阶段 核心操作 产出物 关键工具    预处理 处理 # 指令、展开宏、引入头文件 预处理后的源代码 预处理器（cpp）  ...</div></div></div></a><a class="pagination-related" href="/posts/895e9db.html" title="并发编程：线程同步"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">并发编程：线程同步</div></div><div class="info-2"><div class="info-item-1">核心要点速览 数据竞争：多线程并发读写共享资源（至少一个写操作）的未定义行为 互斥锁：std::mutex（基础）、lock_guard（RAII 推荐）、unique_lock（灵活，配条件变量） 条件变量：wait()（阻塞 + 释锁）、notify_one()&#x2F;notify_all()，需配互斥锁 + 谓词（解虚假唤醒） 原子操作：std::atomic（硬件级原子性，无锁），核心内存序（relaxed&#x2F;acquire&#x2F;release&#x2F;seq_cst） 读写锁：std::shared_mutex（读共享、写独占），优化读多写少场景 常见问题：死锁（固定加锁顺序避免）、虚假唤醒（谓词检查解决）、活锁 &#x2F; 饥饿（延迟 &#x2F; 公平锁缓解）   一、线程同步的目标 保证数据一致性：避免多线程读写共享资源导致的结果不可预测。 控制执行顺序：确保线程按业务逻辑要求的顺序执行（如生产者先生产，消费者后消费）。   二、核心同步机制1. 互斥锁：独占式临界区访问 核心原理：通过 “加锁 - 操作 - 解锁”，保证同一时间仅一个线程进...</div></div></div></a><a class="pagination-related" href="/posts/567736fd.html" title="网络编程：IO模型与高并发"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">网络编程：IO模型与高并发</div></div><div class="info-2"><div class="info-item-1">核心要点速览 五大 IO 模型：阻塞 IO（低并发）、非阻塞 IO（忙等）、IO 多路复用（高并发核心）、信号驱动 IO（极少用）、异步 IO（理想模型） IO 多路复用：select（位图，FD 上限 1024）、poll（动态数组，轮询）、epoll（Linux 首选，O (1) 事件驱动） 同步 vs 异步：同步需等待 IO 就绪 &#x2F; 完成（阻塞 &#x2F; 非阻塞 &#x2F; IO 多路复用），异步无需等待（内核回调通知） 高并发模型：Reactor（事件驱动）、多线程 Reactor（主线程 epoll + 子线程池处理任务） 核心选择：百万级并发选「epoll + 线程池 + ET 模式」，中高并发选「epoll&#x2F;poll + 有限线程」，低并发选「BIO + 线程池」   一、同步 IO 与异步 IO核心定义 同步 IO：线程发起 IO 请求后，必须等待 IO 操作（就绪或数据拷贝）完成才能继续执行，线程主动参与等待过程。 典型：阻塞 IO、非阻塞 IO、IO 多路复用（select&#x2F;poll&#x2F;epoll）。   异步 I...</div></div></div></a><a class="pagination-related" href="/posts/b9f6280b.html" title="并发编程：线程"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">并发编程：线程</div></div><div class="info-2"><div class="info-item-1">核心要点速览 线程 vs 进程：进程是资源分配单位（独立内存），线程是调度单位（共享进程内存），线程通信成本更低 线程创建：std::thread支持函数、Lambda、函数对象三种方式 线程管理：join()等待回收、detach()分离（慎用）、joinable()检查状态 线程标识：std::this_thread::get_id()获取 ID，std::thread::id判断唯一性 线程状态：就绪、运行、阻塞、终止 常用接口： std::this_thread 命名空间提供 sleep_for、sleep_until、yield 等工具函数。   一、线程的概念1. 进程与线程的区别   特性 进程 (Process) 线程 (Thread)    定义 程序的一次执行实例，资源分配的最小单位。 进程内的执行单元，调度的最小单位。   资源 独立的代码、数据、堆栈空间。 共享进程的代码、全局数据，独立的栈和寄存器。   隔离 地址空间独立 (高隔离性)。 共享进程地址空间 (低隔离性)。   通信 进程间通信 (IPC)，开销大。 直接共享数据，开销小。   开销 创建...</div></div></div></a><a class="pagination-related" href="/posts/dc2fae3c.html" title="基础与语法与数据结构：运算符与表达式"><img class="cover" src="/./img/cover.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="info-item-2">基础与语法与数据结构：运算符与表达式</div></div><div class="info-2"><div class="info-item-1">核心要点速览 逻辑运算符（&amp;&amp;&#x2F;||）：支持短路求值，右操作数可能不执行 逗号运算符（,）：按左到右执行多个表达式，返回最后一个值，优先级最低 右结合运算符：赋值运算符（&#x3D;）、条件运算符（?:）、单目运算符，优先级相同时从右到左执行   一、逻辑运算符的短路求值（&amp;&amp; &#x2F; ||）核心规则短路求值是逻辑运算符的优化特性，仅在必要时计算右操作数，直接影响代码执行结果。  &amp;&amp;（逻辑与）：左操作数为false时，直接返回false，右操作数不执行。 ||（逻辑或）：左操作数为true时，直接返回true，右操作数不执行。  常见场景（含副作用表达式） &amp;&amp;短路示例：   123int i = 0;bool res = (i == 1) &amp;&amp; (++i); // 左为false，右++i不执行// 结果：res=false，i=0（而非1）  ||短路示例：   123int j = 0;bool res = (j == 0) || (++j); // 左为true，右++j不执...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="twikoo-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Sean</div><div class="author-info-description">像风走了八千里，不问归期</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">74</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">88</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Devilsean"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">载着零散思绪与滚烫热爱，与同频的你相遇。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E6%80%A7%E4%BA%8B%E4%BB%B6%E9%80%9A%E4%BF%A1"><span class="toc-number">1.</span> <span class="toc-text">一次性事件通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-1%EF%BC%9A%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%EF%BC%88condvar%EF%BC%89%E2%80%94%E2%80%94-%E8%AE%BE%E8%AE%A1%E5%88%AB%E6%89%AD%E7%9A%84-%E2%80%9C%E6%A0%87%E9%85%8D%E2%80%9D"><span class="toc-number">2.</span> <span class="toc-text">方案 1：条件变量（condvar）—— 设计别扭的 “标配”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%A4%9A%E4%BD%99%E7%9A%84%E4%BA%92%E6%96%A5%E9%94%81%EF%BC%88%E4%BB%A3%E7%A0%81%E5%BC%82%E5%91%B3%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">1. 多余的互斥锁（代码异味）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%80%9A%E7%9F%A5%E4%B8%A2%E5%A4%B1%E9%A3%8E%E9%99%A9"><span class="toc-number">2.2.</span> <span class="toc-text">2. 通知丢失风险</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%99%9A%E5%81%87%E5%94%A4%E9%86%92%E9%97%AE%E9%A2%98"><span class="toc-number">2.3.</span> <span class="toc-text">3. 虚假唤醒问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-2%EF%BC%9A%E5%85%B1%E4%BA%AB%E5%B8%83%E5%B0%94-flag-%E2%80%94%E2%80%94-%E6%97%A0%E9%94%81%E4%BD%86%E8%80%97%E8%B5%84%E6%BA%90%E7%9A%84%E8%BD%AE%E8%AF%A2"><span class="toc-number">3.</span> <span class="toc-text">方案 2：共享布尔 flag —— 无锁但耗资源的轮询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">3.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">3.2.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-3%EF%BC%9A%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F-flag-%E2%80%94%E2%80%94-%E8%83%BD%E5%B7%A5%E4%BD%9C%E4%BD%86%E4%B8%8D%E4%BC%98%E9%9B%85%E7%9A%84%E7%BB%84%E5%90%88"><span class="toc-number">4.</span> <span class="toc-text">方案 3：条件变量 + flag —— 能工作但不优雅的组合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9-1"><span class="toc-number">4.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">4.2.</span> <span class="toc-text">问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88-4%EF%BC%9Avoid-promise-future-%E2%80%94%E2%80%94-%E4%B8%80%E6%AC%A1%E6%80%A7%E9%80%9A%E4%BF%A1%E7%9A%84%E6%9C%80%E4%BC%98%E8%A7%A3"><span class="toc-number">5.</span> <span class="toc-text">方案 4：void promise&#x2F;future —— 一次性通信的最优解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%EF%BC%88%E5%8D%95%E5%8F%8D%E5%BA%94%E4%BB%BB%E5%8A%A1%EF%BC%89"><span class="toc-number">5.1.</span> <span class="toc-text">实现（单反应任务）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">5.2.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9-1"><span class="toc-number">5.3.</span> <span class="toc-text">缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%EF%BC%9A%E5%A4%9A%E5%8F%8D%E5%BA%94%E4%BB%BB%E5%8A%A1%E7%9A%84%E4%B8%80%E6%AC%A1%E6%80%A7%E9%80%9A%E7%9F%A5"><span class="toc-number">5.4.</span> <span class="toc-text">扩展：多反应任务的一次性通知</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BD%9C%E5%9C%A8%E9%A3%8E%E9%99%A9%EF%BC%9A%E5%BC%82%E5%B8%B8%E5%AF%BC%E8%87%B4%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%B0%B8%E4%B9%85%E6%8C%82%E8%B5%B7"><span class="toc-number">6.</span> <span class="toc-text">潜在风险：异常导致的线程永久挂起</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/22b7bef.html" title="Item1：理解模板类型推导"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Item1：理解模板类型推导"/></a><div class="content"><a class="title" href="/posts/22b7bef.html" title="Item1：理解模板类型推导">Item1：理解模板类型推导</a><time datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b10f45c0.html" title="Item3：理解 decltype 类型推导"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Item3：理解 decltype 类型推导"/></a><div class="content"><a class="title" href="/posts/b10f45c0.html" title="Item3：理解 decltype 类型推导">Item3：理解 decltype 类型推导</a><time datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/c58a05ed.html" title="Item2：理解 auto 类型推导"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Item2：理解 auto 类型推导"/></a><div class="content"><a class="title" href="/posts/c58a05ed.html" title="Item2：理解 auto 类型推导">Item2：理解 auto 类型推导</a><time datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/989c0ec7.html" title="Item4：掌握查看类型推导结果的方法"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Item4：掌握查看类型推导结果的方法"/></a><div class="content"><a class="title" href="/posts/989c0ec7.html" title="Item4：掌握查看类型推导结果的方法">Item4：掌握查看类型推导结果的方法</a><time datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/604f8623.html" title="Item10：优先选用限域枚举，而非不限域枚举"><img src="/./img/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Item10：优先选用限域枚举，而非不限域枚举"/></a><div class="content"><a class="title" href="/posts/604f8623.html" title="Item10：优先选用限域枚举，而非不限域枚举">Item10：优先选用限域枚举，而非不限域枚举</a><time datetime="2026-03-15T12:00:00.000Z" title="发表于 2026-03-15 20:00:00">2026-03-15</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Sean</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button><button id="go-down" type="button" title="直达底部" onclick="btf.scrollToDest(document.body.scrollHeight, 500)"><i class="fas fa-arrow-down"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getCount = () => {
+    const countELement = document.getElementById('twikoo-count')
+    if(!countELement) return
+    twikoo.getCommentsCount({
+      envId: 'https://comment-psi-gilt.vercel.app/',
+      region: '',
+      urls: [window.location.pathname],
+      includeReply: false
+    }).then(res => {
+      countELement.textContent = res[0].count
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+
+  const init = (el = document, path = location.pathname) => {
+    twikoo.init({
+      el: el.querySelector('#twikoo-wrap'),
+      envId: 'https://comment-psi-gilt.vercel.app/',
+      region: '',
+      onCommentLoaded: () => {
+        btf.loadLightbox(document.querySelectorAll('#twikoo .tk-content img:not(.tk-owo-emotion)'))
+      },
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    GLOBAL_CONFIG_SITE.pageType === 'post' && getCount()
+
+    isShuoshuo && (window.shuoshuoComment.destroyTwikoo = () => {
+      if (el.children.length) {
+        el.innerHTML = ''
+        el.classList.add('no-comment')
+      }
+    })
+  }
+
+  const loadTwikoo = (el, path) => {
+    if (typeof twikoo === 'object') setTimeout(() => init(el, path), 0)
+    else btf.getScript('https://cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.all.min.js').then(() => init(el, path))
+  }
+
+  if (isShuoshuo) {
+    'Twikoo' === 'Twikoo'
+      ? window.shuoshuoComment = { loadComment: loadTwikoo }
+      : window.loadOtherComment = loadTwikoo
+    return
+  }
+
+  if ('Twikoo' === 'Twikoo' || !true) {
+    if (true) btf.loadComment(document.getElementById('twikoo-wrap'), loadTwikoo)
+    else loadTwikoo()
+  } else {
+    window.loadOtherComment = loadTwikoo
+  }
+})()</script></div><canvas id="snow"></canvas><script async src="/js/snow.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>function history_calendar_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-history"> <!-- 挂载容器 --> <div class="card-content"> <div class="item-headline"> <i class="fas fa-clock fa-spin"></i> <span>那年今日</span> </div> <div id="history-baidu" style="height: 100px;overflow: hidden"> <!-- 挂载器 --> <div class="history_swiper-container" id="history-container" style="width: 100%;height: 100%"> <div class="swiper-wrapper" id="history_container_wrapper" style="height:20px"></div> </div> </div> </div>';
+                console.log('已挂载history_calendar')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            history_calendar_injector_config()
+        } </script><script data-pjax  src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script><script data-pjax src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-card-history/baiduhistory/js/main.js"></script><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/5c7e22c2.html" alt=""><img width="48" height="48" src="../../img/post/tengwangge.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-01</span><a class="blog-slider__title" href="posts/5c7e22c2.html" alt="">滕王阁序</a><div class="blog-slider__text">难得糊涂</div><a class="blog-slider__button" href="posts/5c7e22c2.html" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="posts/9a70fb8f.html" alt=""><img width="48" height="48" src="../../img/post/gongbaitou.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-29</span><a class="blog-slider__title" href="posts/9a70fb8f.html" alt="">共白头</a><div class="blog-slider__text">难得糊涂</div><a class="blog-slider__button" href="posts/9a70fb8f.html" alt="">详情   </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = '/';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><script data-pjax>
+    function butterfly_categories_card_injector_config(){
+      var parent_div_git = document.getElementById('recent-posts');
+      var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 380px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 320px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"><li class="categoryBar-list-item" style="background:url(./img/poem.png);"> <a class="categoryBar-list-link" href="categories/诗词歌赋/">诗词歌赋</a><span class="categoryBar-list-count">2</span><span class="categoryBar-list-descr">有格调</span></li><li class="categoryBar-list-item" style="background:url(./img/fwC++.png);"> <a class="categoryBar-list-link" href="categories/C/">C++</a><span class="categoryBar-list-count">30</span><span class="categoryBar-list-descr">有生活</span></li><li class="categoryBar-list-item" style="background:url(./img/Effective-Modern-C++.jpg);"> <a class="categoryBar-list-link" href="categories/Effective-Modern-C/">Effective Modern C++</a><span class="categoryBar-list-count">42</span><span class="categoryBar-list-descr">有品位</span></li></ul></div></div>';
+      console.log('已挂载butterfly_categories_card')
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+      }
+    if( document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    butterfly_categories_card_injector_config()
+    }
+  </script><div class="js-pjax"><script async="async">var arr = document.getElementsByClassName('recent-post-item');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '1s');
+    arr[i].setAttribute('data-wow-delay', '0s');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script><script async="async">var arr = document.getElementsByClassName('card-widget');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '');
+    arr[i].setAttribute('data-wow-delay', '');
+    arr[i].setAttribute('data-wow-offset', '');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script></div><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow.min.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow_init.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/miku.model.json"},"display":{"position":"left","width":200,"height":350,"hOffset":-15,"vOffset":18},"mobile":{"show":true},"react":{"opacity":0.8},"log":false});</script></body></html>
