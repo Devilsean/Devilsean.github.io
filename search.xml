@@ -7281,6 +7281,21 @@ div#archive {
   padding: 0px 15px;
   max-width: 1450px;
   width: 100%;
+}
+
+/* 首页分类卡片计数图标：插件 CSS 指定字体族 "Font Awesome 6 Free"，
+   站点加载的是 FA 7.1.0（仅声明 5 Free / 7 Free / FontAwesome，无 6 Free），
+   缺字导致计数前显示方框；此处改用站点实际加载的字体族，仅作用于该图标。 */
+#categoryBar span.categoryBar-list-count::before {
+  font-family: "Font Awesome 7 Free" !important;
+  font-weight: 900 !important;
+}
+
+/* 背景渐入：主题 enter_transitions 给 #web_bg 的 to_show 为 4s，
+   冷/热加载都让背景多等约 3 秒才可辨认；仅缩短时长，保留渐入曲线，
+   不影响其他入场动画与 #web_bg 的定位/尺寸/层叠。 */
+#web_bg {
+  animation-duration: 0.8s;
 }]]></content>
   </entry>
   <entry>
