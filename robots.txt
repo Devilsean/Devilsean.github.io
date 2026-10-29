@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://devilsean.github.io/sitemap.xml
