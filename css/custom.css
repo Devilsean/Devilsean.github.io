@@ -555,3 +555,26 @@ div#archive {
   left: 74px !important;
   bottom: -60px !important;
 }
+/* ---------- 13. 404 页 ----------
+   原配置 error_404.background 指向 /img/error-page.png，该文件并不存在，
+   页面会渲染成一张裂图。这里隐藏图片，改用文字排版撑起版面。 */
+.error-content .error-img {
+  display: none;
+}
+
+.error-content .error_title {
+  background: linear-gradient(120deg, var(--mk-accent), #9ef0e8 60%, var(--mk-accent));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  animation: mk-shine 8s linear infinite;
+}
+
+.error-content .error_subtitle {
+  color: var(--mk-accent);
+  letter-spacing: 0.08em;
+  opacity: 0.9;
+}

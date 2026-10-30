@@ -11,12 +11,13 @@
   <rights>All rights reserved 2026, Sean</rights>
   <subtitle>像风走了八千里，不问归期</subtitle>
   <title>肖恩的博客</title>
-  <updated>2026-10-27T13:00:29.687Z</updated>
+  <updated>2026-10-30T11:04:53.774Z</updated>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="1. 类别推导" scheme="https://devilsean.github.io/categories/Effective-Modern-C/1-%E7%B1%BB%E5%88%AB%E6%8E%A8%E5%AF%BC/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="模板类型推导" scheme="https://devilsean.github.io/tags/%E6%A8%A1%E6%9D%BF%E7%B1%BB%E5%9E%8B%E6%8E%A8%E5%AF%BC/"/>
     <category term="类别推导" scheme="https://devilsean.github.io/tags/%E7%B1%BB%E5%88%AB%E6%8E%A8%E5%AF%BC/"/>
@@ -28,13 +29,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>从函数模板调用出发，梳理 ParamType 为指针/引用、万能引用和按值传递时的 T 与 ParamType 推导规则，并用示例对比数组与函数实参的退化行为。</summary>
     <title>Item1：理解模板类型推导</title>
-    <updated>2026-10-27T13:00:29.687Z</updated>
+    <updated>2026-10-30T11:04:53.774Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="1. 类别推导" scheme="https://devilsean.github.io/categories/Effective-Modern-C/1-%E7%B1%BB%E5%88%AB%E6%8E%A8%E5%AF%BC/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="类别推导" scheme="https://devilsean.github.io/tags/%E7%B1%BB%E5%88%AB%E6%8E%A8%E5%AF%BC/"/>
     <category term="decltype" scheme="https://devilsean.github.io/tags/decltype/"/>
@@ -46,13 +48,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>用精简示例说明 decltype 如何保留表达式的引用与 const 限定，并对比 auto，重点覆盖函数返回类型依赖参数类型的场景。</summary>
     <title>Item3：理解 decltype 类型推导</title>
-    <updated>2026-10-27T13:00:29.688Z</updated>
+    <updated>2026-10-30T11:04:53.805Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="1. 类别推导" scheme="https://devilsean.github.io/categories/Effective-Modern-C/1-%E7%B1%BB%E5%88%AB%E6%8E%A8%E5%AF%BC/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="类别推导" scheme="https://devilsean.github.io/tags/%E7%B1%BB%E5%88%AB%E6%8E%A8%E5%AF%BC/"/>
     <category term="auto" scheme="https://devilsean.github.io/tags/auto/"/>
@@ -64,13 +67,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>对比 auto 与模板类型推导的异同，说明花括号初始化列表、initializer_list、代理类等场景下的推导结果与常见陷阱。</summary>
     <title>Item2：理解 auto 类型推导</title>
-    <updated>2026-10-27T13:00:29.688Z</updated>
+    <updated>2026-10-30T11:04:53.790Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="1. 类别推导" scheme="https://devilsean.github.io/categories/Effective-Modern-C/1-%E7%B1%BB%E5%88%AB%E6%8E%A8%E5%AF%BC/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="类别推导" scheme="https://devilsean.github.io/tags/%E7%B1%BB%E5%88%AB%E6%8E%A8%E5%AF%BC/"/>
     <content>
@@ -81,13 +85,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>介绍在 IDE、编译错误信息和运行时三个阶段查看类型推导结果的方法，并说明如何借助库设施让编译器主动暴露类型。</summary>
     <title>Item4：掌握查看类型推导结果的方法</title>
-    <updated>2026-10-27T13:00:29.688Z</updated>
+    <updated>2026-10-30T11:04:53.815Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="3. 转向现代C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/3-%E8%BD%AC%E5%90%91%E7%8E%B0%E4%BB%A3C/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="enum class" scheme="https://devilsean.github.io/tags/enum-class/"/>
     <content>
@@ -98,13 +103,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>解释限域 enum 如何避免枚举名泄漏到外层作用域，并对比不限域枚举在强类型、底层类型和前置声明上的差异。</summary>
     <title>Item10：优先选用限域枚举，而非不限域枚举</title>
-    <updated>2026-10-27T13:00:29.691Z</updated>
+    <updated>2026-10-30T11:04:53.857Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="3. 转向现代C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/3-%E8%BD%AC%E5%90%91%E7%8E%B0%E4%BB%A3C/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="override" scheme="https://devilsean.github.io/tags/override/"/>
     <content>
@@ -115,13 +121,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>梳理虚函数重写的完整约束，说明 override 如何让编译器检查签名，避免因参数、const 或引用限定符不一致而意外隐藏基类函数。</summary>
     <title>Item12：使用override重写声明函数</title>
-    <updated>2026-10-27T13:00:29.692Z</updated>
+    <updated>2026-10-30T11:04:53.888Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="2. auto" scheme="https://devilsean.github.io/categories/Effective-Modern-C/2-auto/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="auto" scheme="https://devilsean.github.io/tags/auto/"/>
     <content>
@@ -134,13 +141,14 @@
       <![CDATA[以 std::vector<bool> 为例说明 auto 推导出代理类带来的悬空引用风险，并给出显式类型初始化习惯用法。]]>
     </summary>
     <title>Item6：当auto推导的类型不符合要求时，使用显式类型初始化习惯用法</title>
-    <updated>2026-10-27T13:00:29.690Z</updated>
+    <updated>2026-10-30T11:04:53.842Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="2. auto" scheme="https://devilsean.github.io/categories/Effective-Modern-C/2-auto/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="auto" scheme="https://devilsean.github.io/tags/auto/"/>
     <content>
@@ -151,13 +159,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>从避免未初始化、简化冗长类型和防止意外转换三个角度，说明现代 C++ 中优先使用 auto 的理由与适用边界。</summary>
     <title>Item5：优先使用 auto，而非显式类型声明</title>
-    <updated>2026-10-27T13:00:29.689Z</updated>
+    <updated>2026-10-30T11:04:53.828Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="3. 转向现代C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/3-%E8%BD%AC%E5%90%91%E7%8E%B0%E4%BB%A3C/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="const_iterator" scheme="https://devilsean.github.io/tags/const-iterator/"/>
     <content>
@@ -168,13 +177,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>说明 const_iterator 的只读语义，以及 C++98 到 C++11 在通用代码中使用 begin/end/cbegin 的演进。</summary>
     <title>Item13：优先选用const_iterator，而非iterator</title>
-    <updated>2026-10-27T13:00:29.693Z</updated>
+    <updated>2026-10-30T11:04:53.905Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="3. 转向现代C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/3-%E8%BD%AC%E5%90%91%E7%8E%B0%E4%BB%A3C/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="constexpr" scheme="https://devilsean.github.io/tags/constexpr/"/>
     <content>
@@ -185,13 +195,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>区分 constexpr 作用于对象和函数时的不同含义，说明编译期求值、const 与运行期求值之间的关系。</summary>
     <title>Item15：尽可能使用constexpr</title>
-    <updated>2026-10-27T13:00:29.694Z</updated>
+    <updated>2026-10-30T11:04:53.940Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="3. 转向现代C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/3-%E8%BD%AC%E5%90%91%E7%8E%B0%E4%BB%A3C/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="delete" scheme="https://devilsean.github.io/tags/delete/"/>
     <content>
@@ -202,13 +213,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>对比 C++98 的 private 未定义函数与 C++11 的 =delete，说明删除函数在重载解析和错误提示上的优势。</summary>
     <title>Item11：优先选用删除函数，而非private未定义函数</title>
-    <updated>2026-10-27T13:39:57.196Z</updated>
+    <updated>2026-10-30T11:04:53.874Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="3. 转向现代C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/3-%E8%BD%AC%E5%90%91%E7%8E%B0%E4%BB%A3C/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="noexcept" scheme="https://devilsean.github.io/tags/noexcept/"/>
     <content>
@@ -219,13 +231,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>解释 noexcept 对代码生成、STL 选择和异常安全的价值，强调只在确定不抛异常时声明，避免扭曲实现。</summary>
     <title>Item14：只要函数不抛出异常就加上noexcept声明</title>
-    <updated>2026-10-27T13:39:57.196Z</updated>
+    <updated>2026-10-30T11:04:53.925Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="3. 转向现代C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/3-%E8%BD%AC%E5%90%91%E7%8E%B0%E4%BB%A3C/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="线程安全" scheme="https://devilsean.github.io/tags/%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/"/>
     <content>
@@ -236,13 +249,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>说明 const 成员函数通过 mutable 缓存修改状态时仍可能产生数据竞争，并给出 mutex 与 atomic 的同步方案。</summary>
     <title>Item16：让const成员函数线程安全</title>
-    <updated>2026-10-27T13:39:57.197Z</updated>
+    <updated>2026-10-30T11:04:53.956Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="3. 转向现代C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/3-%E8%BD%AC%E5%90%91%E7%8E%B0%E4%BB%A3C/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="特殊成员函数" scheme="https://devilsean.github.io/tags/%E7%89%B9%E6%AE%8A%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/"/>
     <content>
@@ -253,13 +267,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>梳理构造函数、析构函数、拷贝与移动操作的自动生成规则，以及声明其中任一函数对其它函数的影响。</summary>
     <title>Item17：理解特殊成员函数的生成机制</title>
-    <updated>2026-10-27T13:39:57.197Z</updated>
+    <updated>2026-10-30T11:04:53.970Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="3. 转向现代C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/3-%E8%BD%AC%E5%90%91%E7%8E%B0%E4%BB%A3C/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="初始化" scheme="https://devilsean.github.io/tags/%E5%88%9D%E5%A7%8B%E5%8C%96/"/>
     <content>
@@ -270,13 +285,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>梳理小括号、等号与大括号初始化的差异，重点说明统一初始化、initializer_list 匹配和窄化转换带来的坑。</summary>
     <title>Item7：在创建对象时注意区分()和{}</title>
-    <updated>2026-10-27T13:39:57.198Z</updated>
+    <updated>2026-10-30T11:04:53.987Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="3. 转向现代C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/3-%E8%BD%AC%E5%90%91%E7%8E%B0%E4%BB%A3C/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="nullptr" scheme="https://devilsean.github.io/tags/nullptr/"/>
     <content>
@@ -287,13 +303,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>解释 0 与 NULL 在重载和模板推导中暴露的整型问题，说明 nullptr_t 如何提供类型安全且可读的空指针。</summary>
     <title>Item8：优先选用nullptr，而非0或NULL</title>
-    <updated>2026-10-27T13:39:57.198Z</updated>
+    <updated>2026-10-30T11:04:54.005Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="4. 智能指针" scheme="https://devilsean.github.io/categories/Effective-Modern-C/4-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="unique_ptr" scheme="https://devilsean.github.io/tags/unique-ptr/"/>
     <content>
@@ -304,13 +321,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>介绍 unique_ptr 的独占所有权、零开销和只移动语义，说明如何用自定义删除器管理非内存资源。</summary>
     <title>Item18：使用独占指针管理具备专属所有权的资源</title>
-    <updated>2026-10-27T13:39:57.199Z</updated>
+    <updated>2026-10-30T11:04:54.031Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="3. 转向现代C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/3-%E8%BD%AC%E5%90%91%E7%8E%B0%E4%BB%A3C/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="别名声明" scheme="https://devilsean.github.io/tags/%E5%88%AB%E5%90%8D%E5%A3%B0%E6%98%8E/"/>
     <content>
@@ -321,13 +339,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>对比别名声明与 typedef 在函数指针、模板化别名和依赖类型中的写法差异，说明为何现代 C++ 更推荐 using。</summary>
     <title>Item9：优先选用别名声明，而非typedef</title>
-    <updated>2026-10-27T13:39:57.199Z</updated>
+    <updated>2026-10-30T11:04:54.018Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="4. 智能指针" scheme="https://devilsean.github.io/categories/Effective-Modern-C/4-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="shared_ptr" scheme="https://devilsean.github.io/tags/shared-ptr/"/>
     <content>
@@ -338,13 +357,14 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>解释 shared_ptr 的共享所有权、引用计数和控制块机制，并讨论拷贝、移动与析构的成本。</summary>
     <title>Item19：对于共享资源使用共享指针</title>
-    <updated>2026-10-27T13:39:57.199Z</updated>
+    <updated>2026-10-30T11:04:54.049Z</updated>
   </entry>
   <entry>
     <author>
       <name>Sean</name>
     </author>
     <category term="Effective Modern C++" scheme="https://devilsean.github.io/categories/Effective-Modern-C/"/>
+    <category term="4. 智能指针" scheme="https://devilsean.github.io/categories/Effective-Modern-C/4-%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/"/>
     <category term="C++" scheme="https://devilsean.github.io/tags/C/"/>
     <category term="weak_ptr" scheme="https://devilsean.github.io/tags/weak-ptr/"/>
     <content>
@@ -355,6 +375,6 @@
     <published>2026-03-15T12:00:00.000Z</published>
     <summary>说明 weak_ptr 如何观察 shared_ptr 管理的对象、检测悬空并打破循环引用，以及安全访问的写法。</summary>
     <title>Item20：当shared_ptr可能悬空时使用weak_ptr</title>
-    <updated>2026-10-27T13:39:57.200Z</updated>
+    <updated>2026-10-30T11:04:54.068Z</updated>
   </entry>
 </feed>
