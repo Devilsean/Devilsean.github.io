@@ -182,7 +182,7 @@
 }
 
 /* 首页文章卡片 */
-#recent-posts>.recent-post-item {
+#recent-posts .recent-post-item {
   background: var(--trans-light);
   backdrop-filter: var(--backdrop-filter);
   border-radius: 25px;
@@ -218,7 +218,7 @@ div#archive {
 }
 
 /* 夜间模式遮罩 */
-[data-theme="dark"] #recent-posts>.recent-post-item,
+[data-theme="dark"] #recent-posts .recent-post-item,
 [data-theme="dark"] #aside-content .card-widget,
 [data-theme="dark"] div#post,
 [data-theme="dark"] div#archive,
@@ -293,4 +293,265 @@ div#archive {
    不影响其他入场动画与 #web_bg 的定位/尺寸/层叠。 */
 #web_bg {
   animation-duration: 0.8s;
+}
+
+/* ==========================================================
+   美化增强（2026-10-29）
+   ----------------------------------------------------------
+   · 纯视觉调整，不涉及任何文章内容
+   · 换主色：改下面 --mk-accent 一处即可
+     （同时把 _config.butterfly.yml 的 theme_color 改成同色）
+   · 回退：删掉这一段，上面原有样式不受影响
+   ========================================================== */
+
+:root {
+  --mk-accent: #39c5bb;
+  --mk-accent-soft: rgba(57, 197, 187, 0.18);
+  --mk-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ---------- 1. 滚动条：细、半透明、hover 变实 ---------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--mk-accent-soft);
+  border-radius: 999px;
+  transition: background 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mk-accent);
+}
+
+#aside-content ::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* ---------- 2. 鼠标选中文字 ---------- */
+::selection {
+  background: var(--mk-accent-soft);
+  color: inherit;
+}
+
+[data-theme="dark"] ::selection {
+  background: rgba(57, 197, 187, 0.32);
+}
+
+/* ---------- 3. 文章标题装饰 ----------
+   主题 beautify 未启用，标题本身没有前缀装饰，这里补一套轻量的：
+   h2 左侧渐变竖条、h3 小圆点。只作用于正文容器，不影响侧栏与页头。 */
+#article-container h2 {
+  position: relative;
+  padding-left: 14px;
+}
+
+#article-container h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--mk-accent), #7ee0d6);
+}
+
+#article-container h3 {
+  position: relative;
+  padding-left: 14px;
+}
+
+#article-container h3::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: var(--mk-accent);
+}
+
+/* ---------- 4. 卡片 hover 微动效 ---------- */
+#recent-posts .recent-post-item,
+#aside-content .card-widget {
+  transition:
+    transform 0.32s var(--mk-ease),
+    box-shadow 0.32s var(--mk-ease),
+    border-color 0.32s var(--mk-ease);
+}
+
+#recent-posts .recent-post-item:hover {
+  transform: translateY(-4px);
+  border-color: var(--mk-accent);
+  box-shadow: 0 10px 28px -12px rgba(0, 0, 0, 0.28);
+}
+
+#aside-content .card-widget:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -12px rgba(0, 0, 0, 0.24);
+}
+
+[data-theme="dark"] #recent-posts .recent-post-item:hover {
+  box-shadow: 0 10px 28px -12px rgba(0, 0, 0, 0.7);
+}
+
+/* ---------- 5. 夜间模式：纯黑改偏蓝深灰 ----------
+   纯 #191919 配霓虹字会发闷，换成带一点蓝的深灰，文字发光更透。 */
+[data-theme="dark"] {
+  --trans-dark: rgba(22, 24, 31, 0.88);
+}
+
+[data-theme="dark"] #page-header.nav-fixed #nav {
+  background: rgba(18, 20, 26, 0.72) !important;
+}
+
+/* ==========================================================
+   美化增强 第二组（2026-10-29）
+   · 代码字体、卡片流光、页脚渐变、导航胶囊、图片缩放、阅读进度
+   · 纯视觉，不涉及内容；删除本段即可回退
+   ========================================================== */
+
+/* ---------- 6. 代码字体 JetBrains Mono（自托管，21K/字重） ---------- */
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-700.woff2") format("woff2");
+}
+
+/* ---------- 7. 卡片渐变流光边框（hover 时沿描边流动） ----------
+   用 mask 把渐变裁成 1px 描边，不影响卡片内部任何内容与点击。 */
+#recent-posts .recent-post-item {
+  position: relative;
+}
+
+#recent-posts .recent-post-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 25px;
+  padding: 2px;
+  background: linear-gradient(
+    120deg,
+    transparent 15%,
+    var(--mk-accent) 45%,
+    #7ee0d6 55%,
+    transparent 85%
+  );
+  background-size: 250% 100%;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0.5;
+  transition: opacity 0.35s var(--mk-ease);
+  pointer-events: none;
+}
+
+#recent-posts .recent-post-item:hover::after {
+  opacity: 1;
+  animation: mk-flow 3s linear infinite;
+}
+
+@keyframes mk-flow {
+  to {
+    background-position: 250% 0;
+  }
+}
+
+/* ---------- 8. 页脚渐变文字 ----------
+   注意：Butterfly 5.5.x 的页脚结构是 #footer > .footer-other > .footer-copyright，
+   没有 #footer-wrap（旧教程里的选择器在这里不命中，等于没写）。
+   文字分布在多层 span/a 里，因此对 .footer-other 及其所有后代逐个应用
+   背景裁剪——每个元素各自裁剪自己的渐变，避免子元素透明但无背景而消失。 */
+#footer .footer-other,
+#footer .footer-other * {
+  background: linear-gradient(90deg, var(--mk-accent), #9ef0e8, var(--mk-accent));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: mk-shine 7s linear infinite;
+}
+
+/* 页脚顶部一条渐变分隔线，保证即使渐变文字在小字号下不明显也有视觉变化 */
+#footer .footer-other {
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, var(--mk-accent), transparent) 1;
+  padding-top: 14px;
+}
+
+@keyframes mk-shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* ---------- 9. 导航栏胶囊化 ---------- */
+#page-header.nav-fixed #nav {
+  max-width: 1180px;
+  margin: 8px auto 0;
+  border-radius: 999px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* ---------- 10. 正文图片 hover 微缩放 ---------- */
+#article-container img {
+  border-radius: 12px;
+  transition:
+    transform 0.45s var(--mk-ease),
+    box-shadow 0.45s var(--mk-ease);
+}
+
+#article-container img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 14px 32px -12px rgba(0, 0, 0, 0.38);
+}
+
+/* ---------- 11. 顶部阅读进度条（配套 js/beautify.js） ---------- */
+#mk-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  z-index: 99999;
+  background: linear-gradient(90deg, var(--mk-accent), #9ef0e8);
+  box-shadow: 0 0 10px var(--mk-accent), 0 0 4px var(--mk-accent);
+  pointer-events: none;
+  transition: width 0.08s linear;
+}
+
+/* ---------- 12. 看板娘舞台微调 ----------
+   注意：组件创建的是 <div id="oml2d-stage">，只设 id 不设 class，
+   所以必须用 #oml2d-stage（写成 .oml2d-stage 不会命中）。
+   位置由组件用内联样式写入，需要 !important 才能盖住。
+   left 越大越靠右，bottom 越小（越负）越往下沉。
+   尺寸本身在 source/js/live2d-init.js 里控制。 */
+#oml2d-stage {
+  left: 74px !important;
+  bottom: -60px !important;
 }
