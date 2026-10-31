@@ -578,3 +578,71 @@ div#archive {
   letter-spacing: 0.08em;
   opacity: 0.9;
 }
+
+/* ---------- 14. 键帽 {% kbd %} ----------
+   配套 scripts/tag-kbd.js。技术笔记里表达快捷键用。 */
+.kbd-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  vertical-align: middle;
+  margin: 0 2px;
+}
+
+.kbd-key {
+  display: inline-block;
+  min-width: 1.7em;
+  padding: 1px 7px;
+  font-family: "JetBrains Mono", Consolas, Menlo, monospace;
+  font-size: 0.84em;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--mk-accent);
+  background: rgba(57, 197, 187, 0.08);
+  border: 1px solid rgba(57, 197, 187, 0.35);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .kbd-key {
+  color: #9ef0e8;
+  background: rgba(57, 197, 187, 0.14);
+  border-color: rgba(57, 197, 187, 0.45);
+}
+
+.kbd-plus {
+  margin: 0 2px;
+  font-size: 0.85em;
+  color: var(--mk-accent);
+  opacity: 0.55;
+}
+
+/* ---------- 15. 分享按钮图标 ----------
+   social-share 用的是自带的 iconfont 私有码位（\e882 这些），但那套字体文件
+   在本地化时丢了，官方 dist 里也找不到匹配版本（下载到的码位对不上），
+   于是按钮只剩背景圆、里面空白。
+   这里改用 FontAwesome 品牌图标替换码位，并用 !important 盖掉
+   share.min.css 里 .social-share * { font-family: "iconfont" !important }。 */
+.social-share .icon-qq:before,
+.social-share .icon-weibo:before,
+.social-share .icon-wechat:before,
+.social-share .icon-facebook:before,
+.social-share .icon-x:before,
+.social-share .icon-twitter:before,
+.social-share .icon-linkedin:before {
+  font-family: "Font Awesome 7 Brands" !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+}
+
+.social-share .icon-qq:before { content: "\f1d6" !important; }
+.social-share .icon-weibo:before { content: "\f18a" !important; }
+.social-share .icon-wechat:before { content: "\f1d7" !important; }
+.social-share .icon-facebook:before { content: "\f39e" !important; }
+.social-share .icon-x:before { content: "\e61b" !important; }
+.social-share .icon-twitter:before { content: "\f099" !important; }
+.social-share .icon-linkedin:before { content: "\f08c" !important; }
+
+.social-share .icon-heart:before { content: "\f004" !important; font-family: "Font Awesome 7 Free" !important; font-weight: 900 !important; }
+.social-share .icon-like:before { content: "\f164" !important; font-family: "Font Awesome 7 Free" !important; font-weight: 900 !important; }

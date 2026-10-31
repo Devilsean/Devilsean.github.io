@@ -1649,7 +1649,7 @@ canvas:not(#ribbon-canvas),
   --card-meta: #858585;
   --sidebar-bg: #f6f8fa;
   --sidebar-menu-bg: #fff;
-  --btn-hover-color: #ff7242;
+  --btn-hover-color: #39c5bb;
   --btn-color: #fff;
   --btn-bg: #39c5bb;
   --text-bg-hover: rgba(57,197,187,0.7);
@@ -1658,12 +1658,12 @@ canvas:not(#ribbon-canvas),
   --white: #fff;
   --text-highlight-color: #1f2d3d;
   --blockquote-color: #6a737d;
-  --blockquote-bg: rgba(73,177,245,0.1);
+  --blockquote-bg: rgba(57,197,187,0.1);
   --reward-pop: #f5f5f5;
   --toc-link-color: #666261;
   --card-box-shadow: 0 3px 8px 6px rgba(7,17,27,0.05);
   --card-hover-box-shadow: 0 3px 8px 6px rgba(7,17,27,0.09);
-  --pseudo-hover: #ff7242;
+  --pseudo-hover: #39c5bb;
   --headline-presudo: #a0a0a0;
   --scrollbar-color: #39c5bb;
   --default-bg-color: #39c5bb;
@@ -1881,7 +1881,7 @@ img:not([src]) {
 blockquote {
   margin: 0 0 20px;
   padding: 7px 15px;
-  border-left: 4px solid #49b1f5;
+  border-left: 4px solid #39c5bb;
   background-color: var(--blockquote-bg);
   color: var(--blockquote-color);
   border-radius: 6px;
@@ -2036,8 +2036,8 @@ figure.highlight pre .javascript .function {
 }
 .container code {
   padding: 2px 5px;
-  background: rgba(27,31,35,0.05);
-  color: #f47466;
+  background: rgba(57,197,187,0.08);
+  color: #2b8c85;
 }
 .container pre {
   padding: 10px 20px;
@@ -5790,7 +5790,7 @@ figure.highlight pre .javascript .function {
 #waline-wrap {
   --waline-font-size: 1.1em;
   --waline-theme-color: #39c5bb;
-  --waline-active-color: #ff7242;
+  --waline-active-color: #39c5bb;
 }
 #waline-wrap .wl-comment-actions > button:not(last-child) {
   padding-right: 4px;
@@ -7298,7 +7298,7 @@ blockquote.pullquote.right {
   box-shadow: none;
 }
 [data-theme='dark'] .container .note code {
-  background: rgba(27,31,35,0.05);
+  background: rgba(57,197,187,0.08);
 }
 [data-theme='dark'] .container .aplayer {
   filter: brightness(0.8);

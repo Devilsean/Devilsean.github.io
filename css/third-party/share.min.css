@@ -1,6 +1,6 @@
 @font-face {
   font-family: "iconfont";
-  src: url("../fonts/iconfont.woff2") format("woff2"), url("../fonts/iconfont.woff") format("woff"), url("../fonts/iconfont.ttf") format("truetype");
+  src: url("../fonts/iconfont.woff") format("woff"), url("../fonts/iconfont.ttf") format("truetype"); /* woff2 已移除：官方 dist 未提供该文件 */
 }
 .social-share {
   font-family: "iconfont" !important;
