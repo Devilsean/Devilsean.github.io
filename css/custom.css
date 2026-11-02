@@ -553,7 +553,7 @@ div#archive {
    尺寸本身在 source/js/live2d-init.js 里控制。 */
 #oml2d-stage {
   left: 74px !important;
-  bottom: -60px !important;
+  bottom: -25px !important;
 }
 /* ---------- 13. 404 页 ----------
    原配置 error_404.background 指向 /img/error-page.png，该文件并不存在，
@@ -646,3 +646,111 @@ div#archive {
 
 .social-share .icon-heart:before { content: "\f004" !important; font-family: "Font Awesome 7 Free" !important; font-weight: 900 !important; }
 .social-share .icon-like:before { content: "\f164" !important; font-family: "Font Awesome 7 Free" !important; font-weight: 900 !important; }
+
+/* ---------- 17. 侧栏「本站」统计卡 ----------
+   数据来自 scripts/site-stats.js -> window.MK_STATS，
+   渲染逻辑在 beautify.js。插在作者卡之后。 */
+.mk-stats-list {
+  padding: 0 4px;
+}
+
+.mk-stats-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  font-size: 0.9rem;
+  border-bottom: 1px dashed var(--mk-line);
+}
+
+.mk-stats-row:last-child {
+  border-bottom: none;
+}
+
+.mk-stats-label {
+  color: var(--mk-muted);
+  white-space: nowrap;
+}
+
+.mk-stats-value {
+  font-weight: 600;
+  color: var(--mk-accent);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ---------- 19. 音乐播放器 ----------
+   APlayer 的 fixed 模式默认贴左下角：.aplayer.aplayer-fixed 与
+   .aplayer-body 都是 position:fixed; left:0; right:0; max-width:400px，
+   而歌词 .aplayer-lrc 也是 position:fixed，默认 left:0; right:0（整行视口居中）。
+
+   关键坑：绝不能给 .aplayer-body 加 transform！transform 会把它变成内部
+   fixed 子元素（歌词）的「包含块」，歌词就会被困在左侧 400px 的播放器盒子里，
+   跟着跑到左下角。之前歌词偏左就是 transform:translateX(8px) 造成的。
+
+   正确做法：用 left 平移播放器本体，歌词保持以「视口」为包含块，整行居中在底部。
+   底部中央留给歌词，右下角是主题工具栏，左上/左下是看板娘，本体贴最左并右移 8px，
+   正好插在看板娘左侧。 */
+.aplayer.aplayer-fixed {
+  bottom: 8px !important;
+  z-index: 9999 !important;
+}
+
+.aplayer.aplayer-fixed .aplayer-body {
+  left: 8px !important;
+  bottom: 8px !important;
+  z-index: 9999 !important;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
+}
+
+/* 歌单面板是外层里的静态流，用 transform 随本体右移 8px，保持同一条竖线 */
+.aplayer.aplayer-fixed .aplayer-list {
+  transform: translateX(8px);
+  bottom: 78px !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* 歌词：保持相对视口的整行居中，直接放在正下方，不被播放器带着跑 */
+.aplayer.aplayer-fixed .aplayer-lrc {
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 10px !important;
+  padding: 0 90px;
+  text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+  .aplayer.aplayer-fixed,
+  .aplayer.aplayer-fixed .aplayer-body,
+  .aplayer.aplayer-fixed .aplayer-list {
+    transform: none;
+    bottom: 0 !important;
+    border-radius: 0;
+  }
+
+  .aplayer.aplayer-fixed .aplayer-body {
+    left: 0 !important;
+  }
+
+  .aplayer.aplayer-fixed .aplayer-list {
+    bottom: 64px !important;
+  }
+
+  .aplayer.aplayer-fixed .aplayer-lrc {
+    padding: 0 12px;
+  }
+}
+
+/* ---------- 20. 阅读模式 ----------
+   主题默认只隐藏 #aside-content / #nav / #footer / #rightside 等，
+   但音乐播放器是 fixed 浮层、不在隐藏列表里；歌词又被我改成整屏居中，
+   进入阅读模式后会压在居中的正文上（看起来像「崩了」）。
+   这里补隐藏，保证纯净阅读。看板娘同理是浮层，但先保留，需要再开。 */
+.read-mode .aplayer.aplayer-fixed,
+.read-mode #mk-music {
+  display: none !important;
+}

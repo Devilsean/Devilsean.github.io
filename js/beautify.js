@@ -55,3 +55,65 @@
     initProgress();
   }
 })();
+
+/**
+ * 侧栏「本站」统计卡
+ * ---------------------------------------------------------------------------
+ * 数据由 scripts/site-stats.js 在构建时算好，注入到 window.MK_STATS。
+ * 这里只负责渲染卡片，插在 .card-info 之后。
+ * 参考 blog.zhheo.com 的统计卡，但只保留本地能算的项，不依赖第三方服务。
+ */
+(function () {
+  'use strict';
+
+  function fmt(n) {
+    n = Number(n) || 0;
+    if (n >= 10000) return (n / 10000).toFixed(1) + ' 万';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+    return String(n);
+  }
+
+  function build() {
+    // 注意：window.MK_STATS 由 site-stats.js 注入在 body_end 更靠后的位置，
+    // 本脚本执行时可能还没定义，所以必须在 DOMContentLoaded 之后才取值，
+    // 不能放在 IIFE 顶部判断（那样会直接 return 掉）。
+    var S = window.MK_STATS;
+    if (!S || document.querySelector('.mk-stats')) return;
+    var info = document.querySelector('.card-info');
+    if (!info) return;
+
+    var rows = [
+      ['已运行', S.days + ' 天'],
+      ['总字数', fmt(S.words)],
+      ['篇均', fmt(S.avgWords) + ' 字'],
+      ['最后更新', S.lastUpdate || '—']
+    ];
+
+    var html =
+      '<div class="item-headline"><i class="fas fa-chart-line"></i><span>本站</span></div>' +
+      '<div class="mk-stats-list">';
+    rows.forEach(function (r) {
+      html +=
+        '<div class="mk-stats-row">' +
+        '<span class="mk-stats-label">' + r[0] + '</span>' +
+        '<span class="mk-stats-value">' + r[1] + '</span>' +
+        '</div>';
+    });
+    html += '</div>';
+
+    var card = document.createElement('div');
+    card.className = 'card-widget mk-stats';
+    card.innerHTML = html;
+    info.insertAdjacentElement('afterend', card);
+  }
+
+  function boot() {
+    build();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
+})();

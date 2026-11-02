@@ -33,8 +33,8 @@
       position: [0, 20],
       scale: 0.15,
       stageStyle: {
-        width: 250,
-        height: 400
+        width: 215,
+        height: 344
       }
     }
   ];
